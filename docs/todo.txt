@@ -1,0 +1,20 @@
+v.[0.1] node head.js file1
+        node head.js -n 2
+
+ * create directories: src, test
+        create main file: head.js
+        create source files: headLib.js
+        create test files: testHeadLib.js
+        modules:chai, npm
+
+ * appTests
+
+ * function Names: 
+        write test cases before implementation of every function
+        parse user input 
+        get file contents 
+        separate All the Lines  
+        extract First n Lines 
+        display the n Lines 
+
+------------------------------------------------------------------------------------------    
