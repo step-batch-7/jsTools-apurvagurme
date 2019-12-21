@@ -1,0 +1,208 @@
+                                       **** FEATURES ****
+
+node head.js file1
+node head.js -n 2 file1
+cat file1 | node head.js 
+cat file1 | node head.js -n 2
+head file1 file2
+head -n 2 file1 file2
+
+                                        **** head command flow ****
+
+**** Example: ****
+          In the below example file1.txt and file2.txt is a file and when we run this command 
+          we will get the first 10 lines of it.
+
+                                           **** blackbox : ****
+
+**** Possibilities: ****
+                1.File contains 10 or more than 10 lines,
+                2.File contains less than 10 lines
+                3.Any one file is not present.
+
+                                         **** First Possibility ****
+Input ==> head file1.txt file2.txt
+==> file1.txt <==
+One
+Two
+Three
+Four
+Five
+Six 
+Seven 
+Eight 
+Nine
+Ten
+Eleven
+Twelve
+
+==> file2.txt <==
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+Output =>
+==>file1.txt<==
+One
+Two
+Three
+Four
+Five
+Six 
+Seven 
+Eight 
+Nine
+Ten
+
+==>file2.txt<==
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+                                            **** Second Possibility ****
+
+Input => head.js -n 2 file1.txt , file2.txt 
+
+file1.txt =>
+One
+Two
+
+file2.txt =>
+1
+2
+
+Output =>
+==>file1.txt<==
+One
+Two
+
+==>file2.txt<==
+1
+2
+
+                                              **** Third Possibility ****
+
+Input => node head.js -n 2 file1.txt missing.txt
+==> file1
+One
+Two
+Three
+Four
+Five
+Six 
+Seven 
+Eight 
+Nine
+Ten
+Eleven
+Twelve
+
+Output =>
+==> file1.txt <==
+One
+Two
+head: missing.txt: No such file or directory 
+                            
+                                    **** The head flow  ****       
+
+[6.1] The last step
+output => text: firstNLines
+    One
+    Two
+    Three
+    Four
+    Five
+    Six
+    Seven
+    Eight
+    Nine
+    Ten
+
+input =>  contentsOfNLines:
+    ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"]
+
+name => formatNLines
+
+-------------------------------------------------------------------------------------------
+
+[6.2] a) default 10 lines
+output => array of strings: contentsOfNLines
+     ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"]
+
+input =>array of strings: contentsOfAllLines 
+    ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve"]
+
+name => extractFirstNLines
+
+[6.2] b) firstNLines
+output => array of first 2 lines: contentsOfFirstNLines
+   ["One","Two"]
+
+input => array of strings: contentsOfAllLines
+    array of strings: [["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve"],'2']
+
+name => extractFirstNLines
+
+-------------------------------------------------------------------------------------------
+
+[6.3]
+output => arrays of strings: contentsOfEachFile  
+    ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve"]
+
+input => arrays of string: contentsOfAllLines
+    "One\nTwo\nThree\nFour\nFive\nSix\nSeven\nEight\nNine\nTen\nEleven\nTwelve"
+
+name => separateAllLines
+    
+-------------------------------------------------------------------------------------------
+
+[6.4] a) file exists
+output => array of strings: contentsOfAllLines  
+    ["One\nTwo\nThree\nFour\nFive\nSix\nSeven\nEight\nNine\nTen\nEleven\nTwelve"]
+
+input => arrays of strings: filenames
+    'file1.txt'
+
+name => getFileContents
+
+[6.4] b) file dosen't exists
+output => string: missing file message  
+    ["file not present"]
+
+input => arrays of strings: filenames
+    'missing.txt'
+
+name => getFileContents
+
+-------------------------------------------------------------------------------------------
+
+[6.5] a)filenames
+output => object of strings: Given filenames and number of lines 
+    1.{ filenames: ['file1.txt','file2.txt'], numberOfLines: '2'}
+    2.{ filenames: ['file1.txt'] }
+    3.{ filenames: ['file1.txt'], numberOfLines: '2' }
+    
+input => array of strings: commandLineArgs
+    1.['node', 'head.js', '-n', '2', 'file1.txt', 'file2.txt']
+    2.['node', 'head.js', 'file1.txt']  
+    3.['node', 'head.js', '-n', '2', 'file1.txt']
+
+name => parseInput
+
+-------------------------------------------------------------------------------------------
