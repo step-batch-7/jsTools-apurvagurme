@@ -1,8 +1,9 @@
 const fs = require('fs');
 const { existsSync } = fs;
+const { stderr } = require('process');
 
 class Head {
-  constructor(filename) {
+  constructor(filename, requiredNoOfLines) {
     this.filenames = [filename];
     this.requiredNoOfLines = 10;
   }
@@ -11,7 +12,9 @@ class Head {
     if (existsSync(filePath)) {
       const contents = fs.readFileSync(filePath, 'utf8');
       return contents;
-    } else [`head: ${filePath}: No such file or directory`];
+    } else {
+      throw new Error(`head: ${filePath}: No such file or directory`);
+    }
   }
 
   separateAllLines(contents) {
