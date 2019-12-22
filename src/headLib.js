@@ -1,34 +1,33 @@
 const fs = require('fs');
+const { existsSync } = fs;
 
 class Head {
-  constructor() {
-    this.filenames = [];
+  constructor(filename) {
+    this.filenames = [filename];
     this.requiredNoOfLines = 10;
   }
 
-  parseInput(userOptions) {
-    return { filenames: userOptions };
-  }
-
   getFileContents(filePath) {
-    if (filePath.exists) {
-      const contents = fs.readFileSync(filePath);
+    if (existsSync(filePath)) {
+      const contents = fs.readFileSync(filePath, 'utf8');
       return contents;
-    }
-    return [`head: ${filePath}: No such file or directory`];
+    } else [`head: ${filePath}: No such file or directory`];
   }
 
   separateAllLines(contents) {
-    return contents.split('\n');
+    const lines = contents.split('\n');
+    return lines;
   }
 
   extractFirstNLines(contents) {
-    const firstNLines = contents.filter((oneLine, index) => {
-      if (index < this.requiredNoOfLines) {
-        return oneLine;
-      }
-    });
+    const firstNLines = contents.filter(
+      (oneLine, index) => index < this.requiredNoOfLines
+    );
     return firstNLines;
+  }
+
+  formatLines(requiredLines) {
+    return requiredLines.join('\n');
   }
 }
 

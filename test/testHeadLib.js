@@ -1,14 +1,6 @@
 const Head = require('../src/headLib.js');
 const { assert } = require('chai');
 
-describe('parseInput', function() {
-  it('should give the userInputs', function() {
-    const head = new Head();
-    const expected = { filenames: ['file1'] };
-    assert.deepStrictEqual(head.parseInput(['file1']), expected);
-  });
-});
-
 describe('getFileContents', function() {
   it('should return the contents of file', function() {
     const getFileContents = function(path, encoding) {

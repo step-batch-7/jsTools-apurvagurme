@@ -1,0 +1,11 @@
+node head.js ./appTests/file1.txt
+One
+Two
+Three
+Four
+Five
+Six
+Seven
+Eight
+Nine
+Ten

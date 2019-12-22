@@ -15,6 +15,7 @@ v.[0.1] node head.js file1
         get file contents --done--
         separate All the Lines  --done--
         extract First n Lines --done--
-        display the n Lines 
+        formatLines --done--
+        display the n Lines --done--
 
 ------------------------------------------------------------------------------------------    
