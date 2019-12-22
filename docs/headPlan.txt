@@ -183,7 +183,7 @@ name => getFileContents
 
 [6.4] b) file dosen't exists
 output => string: missing file message  
-    ["file not present"]
+    head: filename: No such file or directory
 
 input => arrays of strings: filenames
     'missing.txt'

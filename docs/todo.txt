@@ -13,7 +13,7 @@ v.[0.1] node head.js file1
         write test cases before implementation of every function
         parse user input --done--
         get file contents --done--
-        separate All the Lines  
+        separate All the Lines  --done--
         extract First n Lines 
         display the n Lines 
 
