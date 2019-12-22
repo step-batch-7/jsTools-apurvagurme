@@ -1,13 +1,13 @@
 v.[0.1] node head.js file1
         node head.js -n 2
 
- * create directories: src, test
-        create main file: head.js
-        create source files: headLib.js
-        create test files: testHeadLib.js
-        modules:chai, npm
+ * create directories: src, test --done--
+        create main file: head.js --done--
+        create source files: headLib.js --done--
+        create test files: testHeadLib.js --done--
+        modules: chai, npm --done--
 
- * appTests
+ * appTests --done--
 
  * function Names: 
         write test cases before implementation of every function
