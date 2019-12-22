@@ -14,7 +14,7 @@ v.[0.1] node head.js file1
         parse user input --done--
         get file contents --done--
         separate All the Lines  --done--
-        extract First n Lines 
+        extract First n Lines --done--
         display the n Lines 
 
 ------------------------------------------------------------------------------------------    
