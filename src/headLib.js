@@ -7,9 +7,11 @@ class Head {
   getFileContents(path, readFunc, isExistFunc) {
     if (isExistFunc(path)) {
       const contents = readFunc(path, 'utf8');
-      return contents;
+      return { lines: contents };
     }
-    throw new Error(`head: ${path}: No such file or directory`);
+    return {
+      error: `head: ${path}: No such file or directory`
+    };
   }
 
   separateAllLines(contents) {
@@ -28,15 +30,15 @@ class Head {
     return requiredLines.join('\n');
   }
 
-  parseInput = function(userInput) {
-    if (userInput.includes('-n')) {
-      this.requiredNoOfLines = userInput[userInput.indexOf('-n') + 1];
-      this.filePath = userInput.slice(userInput.indexOf('-n') + 2);
+  initialize(cmdLineArgs) {
+    if (cmdLineArgs.includes('-n')) {
+      this.requiredNoOfLines = cmdLineArgs[cmdLineArgs.indexOf('-n') + 1];
+      this.filePath = cmdLineArgs.slice(cmdLineArgs.indexOf('-n') + 2);
     } else {
-      this.filePath = userInput;
+      this.filePath = cmdLineArgs;
     }
-    return { filePath: this.filePath, numberOfLines: this.requiredNoOfLines };
-  };
+    return this;
+  }
 }
 
 module.exports = Head;

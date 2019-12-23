@@ -14,18 +14,10 @@ describe('HEAD', function() {
     };
 
     it('should read the contents of the file in the given path', function() {
-      const path = 'otherPath';
-      assert.throws(
-        () => head.getFileContents(path, readFunc2, isExistFunc),
-        `head: ${path}: No such file or directory`
-      );
-    });
-
-    it('should read the contents of the file in the given path', function() {
       const path = 'path';
       assert.deepStrictEqual(
         head.getFileContents(path, readFunc2, isExistFunc),
-        ''
+        { lines: '' }
       );
     });
   });
@@ -76,19 +68,19 @@ describe('HEAD', function() {
     });
   });
 
-  describe('parseInput', function() {
+  describe('initialize', function() {
     it('should give the userInputs', function() {
       const head = new Head();
       const userInputs = ['-n', '2', 'file1'];
-      const expected = { filePath: ['file1'], numberOfLines: '2' };
-      assert.deepStrictEqual(head.parseInput(userInputs), expected);
+      const expected = { filePath: ['file1'], requiredNoOfLines: '2' };
+      assert.deepStrictEqual(head.initialize(userInputs), expected);
     });
 
     it('should give the userInputs', function() {
       const head = new Head();
       const userInputs = ['file1'];
-      const expected = { filePath: ['file1'], numberOfLines: 10 };
-      assert.deepStrictEqual(head.parseInput(userInputs), expected);
+      const expected = { filePath: ['file1'], requiredNoOfLines: 10 };
+      assert.deepStrictEqual(head.initialize(userInputs), expected);
     });
   });
 });
