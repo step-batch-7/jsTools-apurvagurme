@@ -18,3 +18,4 @@ v.[0.1] node head.js file1
         display the n Lines --done--
     
 ------------------------------------------------------------------------------------------    
+* Changes required for implementation of -n option

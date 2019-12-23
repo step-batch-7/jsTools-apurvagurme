@@ -1,61 +1,84 @@
 const Head = require('../src/headLib.js');
 const { assert } = require('chai');
 
-describe('getFileContents', function() {
-  it('should return the contents of file', function() {
-    const getFileContents = function(path, encoding) {
-      if (path == 'somePath' && encoding == 'utf8') return true;
-      return false;
+describe('HEAD', function() {
+  describe('getFileContents', function() {
+    const head = new Head();
+    const isExistFunc = function(path) {
+      if (path === 'path') return '';
+      return '[]';
     };
-    const path = 'somePath';
-    const encoding = 'utf8';
-    assert.isOk(getFileContents(path, encoding));
-  });
-
-  it('should return false is file is not present', function() {
-    const getFileContents = function(path, encoding) {
-      if (path == 'somePat' && encoding == 'utf8') return true;
-      return false;
+    const readFunc1 = function(path, encoding) {
+      return '';
     };
-    const path = 'somePath';
-    const encoding = 'utf8';
-    assert.notOk(getFileContents(path, encoding));
-  });
-});
 
-describe('separateAllLines', function() {
-  it('should give all lines separated into an array', function() {
-    const head = new Head();
-    const contents = 'one\ntwo\nthree';
-    const expected = ['one', 'two', 'three'];
-    assert.deepStrictEqual(head.separateAllLines(contents), expected);
-  });
-});
-
-describe('extractFirstNLines', function() {
-  it('should give the default 10 elements if required number of lines is not given', function() {
-    const head = new Head();
-    const fileContents = [
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9',
-      '10',
-      '11'
-    ];
-    const expected = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-    assert.deepStrictEqual(head.extractFirstNLines(fileContents), expected);
+    it('should read the contents of the file in the given path', function() {
+      assert.deepStrictEqual(
+        head.getFileContents('otherPath', readFunc1, isExistFunc),
+        ''
+      );
+    });
   });
 
-  it('should give all elements if total number of elements ara less than 10 required number of lines is not given', function() {
-    const head = new Head();
-    const fileContents = ['1', '2', '3'];
-    const expected = ['1', '2', '3'];
-    assert.deepStrictEqual(head.extractFirstNLines(fileContents), expected);
+  describe('separateAllLines', function() {
+    it('should give all lines separated into an array', function() {
+      const head = new Head();
+      const contents = 'one\ntwo\nthree';
+      const expected = ['one', 'two', 'three'];
+      assert.deepStrictEqual(head.separateAllLines(contents), expected);
+    });
+  });
+
+  describe('extractFirstNLines', function() {
+    it('should give the default 10 elements if required number of lines is not given', function() {
+      const head = new Head();
+      const fileContents = [
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        '10',
+        '11'
+      ];
+      const expected = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+      assert.deepStrictEqual(head.extractFirstNLines(fileContents), expected);
+    });
+
+    it('should give all elements if total number of elements ara less than 10 required number of lines is not given', function() {
+      const head = new Head();
+      const fileContents = ['1', '2', '3'];
+      const expected = ['1', '2', '3'];
+      assert.deepStrictEqual(head.extractFirstNLines(fileContents), expected);
+    });
+  });
+
+  describe('formatLines', function() {
+    it("should join the given elements with '\n'", function() {
+      const head = new Head();
+      const expected = 'one\ntwo';
+      const array = ['one', 'two'];
+      assert.strictEqual(head.formatLines(array), expected);
+    });
+  });
+
+  describe('parseInput', function() {
+    it('should give the userInputs', function() {
+      const head = new Head();
+      const userInputs = ['-n', '2', 'file1'];
+      const expected = { filePath: ['file1'], numberOfLines: '2' };
+      assert.deepStrictEqual(head.parseInput(userInputs), expected);
+    });
+
+    it('should give the userInputs', function() {
+      const head = new Head();
+      const userInputs = ['file1'];
+      const expected = { filePath: ['file1'], numberOfLines: 10 };
+      assert.deepStrictEqual(head.parseInput(userInputs), expected);
+    });
   });
 });

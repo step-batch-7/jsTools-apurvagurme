@@ -1,20 +1,15 @@
-const fs = require('fs');
-const { existsSync } = fs;
-const { stderr } = require('process');
-
 class Head {
-  constructor(filename, requiredNoOfLines) {
-    this.filenames = [filename];
+  constructor() {
+    this.filePath = [];
     this.requiredNoOfLines = 10;
   }
 
-  getFileContents(filePath) {
-    if (existsSync(filePath)) {
-      const contents = fs.readFileSync(filePath, 'utf8');
+  getFileContents(path, readFunc, isExistFunc) {
+    if (isExistFunc(path)) {
+      const contents = readFunc(path, 'utf8');
       return contents;
-    } else {
-      throw new Error(`head: ${filePath}: No such file or directory`);
     }
+    throw new Error(`head: ${path}: No such file or directory`);
   }
 
   separateAllLines(contents) {
@@ -32,6 +27,16 @@ class Head {
   formatLines(requiredLines) {
     return requiredLines.join('\n');
   }
+
+  parseInput = function(userInput) {
+    if (userInput.includes('-n')) {
+      this.requiredNoOfLines = userInput[userInput.indexOf('-n') + 1];
+      this.filePath = userInput.slice(userInput.indexOf('-n') + 2);
+    } else {
+      this.filePath = userInput;
+    }
+    return { filePath: this.filePath, numberOfLines: this.requiredNoOfLines };
+  };
 }
 
 module.exports = Head;

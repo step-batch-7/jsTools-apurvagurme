@@ -1,2 +1,3 @@
+.nyc_output/
 runAppTest.sh
 node_modules
