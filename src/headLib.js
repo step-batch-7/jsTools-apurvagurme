@@ -1,7 +1,11 @@
+const fs = require('fs');
+
 class Head {
-  constructor() {
-    this.filePath = [];
-    this.requiredNoOfLines = 10;
+  constructor(filePath, requiredNoOfLines = 10) {
+    this.filePath = filePath;
+    this.requiredNoOfLines = requiredNoOfLines;
+    this.readFunc = fs.readFileSync;
+    this.isExistFunc = fs.existsSync;
   }
 
   getFileContents(path, readFunc, isExistFunc) {
@@ -28,16 +32,6 @@ class Head {
 
   formatLines(requiredLines) {
     return requiredLines.join('\n');
-  }
-
-  initialize(cmdLineArgs) {
-    if (cmdLineArgs.includes('-n')) {
-      this.requiredNoOfLines = cmdLineArgs[cmdLineArgs.indexOf('-n') + 1];
-      this.filePath = cmdLineArgs.slice(cmdLineArgs.indexOf('-n') + 2);
-    } else {
-      this.filePath = cmdLineArgs;
-    }
-    return this;
   }
 }
 

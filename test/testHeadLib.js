@@ -1,7 +1,19 @@
 const Head = require('../src/headLib.js');
 const { assert } = require('chai');
+const fs = require('fs');
 
 describe('HEAD', function() {
+  describe('test Head class', function() {
+    it('should give an instance of the head class in the expected format', function() {
+      const head = new Head(['./file1']);
+      assert.deepStrictEqual(head, {
+        filePath: ['./file1'],
+        requiredNoOfLines: 10,
+        readFunc: fs.readFileSync,
+        isExistFunc: fs.existsSync
+      });
+    });
+  });
   describe('getFileContents', function() {
     const head = new Head();
     const isExistFunc = function(path) {
@@ -65,22 +77,6 @@ describe('HEAD', function() {
       const expected = 'one\ntwo';
       const array = ['one', 'two'];
       assert.strictEqual(head.formatLines(array), expected);
-    });
-  });
-
-  describe('initialize', function() {
-    it('should give the userInputs', function() {
-      const head = new Head();
-      const userInputs = ['-n', '2', 'file1'];
-      const expected = { filePath: ['file1'], requiredNoOfLines: '2' };
-      assert.deepStrictEqual(head.initialize(userInputs), expected);
-    });
-
-    it('should give the userInputs', function() {
-      const head = new Head();
-      const userInputs = ['file1'];
-      const expected = { filePath: ['file1'], requiredNoOfLines: 10 };
-      assert.deepStrictEqual(head.initialize(userInputs), expected);
     });
   });
 });

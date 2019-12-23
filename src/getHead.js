@@ -1,9 +1,20 @@
 const fs = require('fs');
 const Head = require('./headLib.js');
 
+const parseCmdLineArgs = function(cmdLineArgs) {
+  const parsedInput = {};
+  if (cmdLineArgs.includes('-n')) {
+    parsedInput.requiredNoOfLines = cmdLineArgs[cmdLineArgs.indexOf('-n') + 1];
+    parsedInput.filePath = cmdLineArgs.slice(cmdLineArgs.indexOf('-n') + 2);
+  } else {
+    parsedInput.filePath = cmdLineArgs;
+  }
+  return parsedInput;
+};
+
 const getHeadLinesOrError = function(userInput, outLog, errorLog) {
-  const head = new Head();
-  const parsedInput = head.initialize(userInput);
+  const parsedInput = parseCmdLineArgs(userInput);
+  const head = new Head(parsedInput.filePath, parsedInput.requiredNoOfLines);
   const operation = head.getFileContents(
     parsedInput.filePath[0],
     fs.readFileSync,
@@ -24,4 +35,8 @@ const performHeadOperation = function(head, operation) {
   return formattedLines;
 };
 
-module.exports = { getHeadLinesOrError, performHeadOperation };
+module.exports = {
+  getHeadLinesOrError,
+  performHeadOperation,
+  parseCmdLineArgs
+};
