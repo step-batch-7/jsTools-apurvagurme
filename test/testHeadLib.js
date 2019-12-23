@@ -5,16 +5,26 @@ describe('HEAD', function() {
   describe('getFileContents', function() {
     const head = new Head();
     const isExistFunc = function(path) {
-      if (path === 'path') return '';
-      return '[]';
+      if (path === 'path') return true;
+      return false;
     };
-    const readFunc1 = function(path, encoding) {
+
+    const readFunc2 = function(path, encoding) {
       return '';
     };
 
     it('should read the contents of the file in the given path', function() {
+      const path = 'otherPath';
+      assert.throws(
+        () => head.getFileContents(path, readFunc2, isExistFunc),
+        `head: ${path}: No such file or directory`
+      );
+    });
+
+    it('should read the contents of the file in the given path', function() {
+      const path = 'path';
       assert.deepStrictEqual(
-        head.getFileContents('otherPath', readFunc1, isExistFunc),
+        head.getFileContents(path, readFunc2, isExistFunc),
         ''
       );
     });
@@ -49,7 +59,7 @@ describe('HEAD', function() {
       assert.deepStrictEqual(head.extractFirstNLines(fileContents), expected);
     });
 
-    it('should give all elements if total number of elements ara less than 10 required number of lines is not given', function() {
+    it('should give all elements if total number of elements are less than 10 required number of lines is not given', function() {
       const head = new Head();
       const fileContents = ['1', '2', '3'];
       const expected = ['1', '2', '3'];
