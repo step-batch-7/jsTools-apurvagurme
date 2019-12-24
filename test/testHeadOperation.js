@@ -10,10 +10,13 @@ const { readFileSync, existsSync } = fs;
 
 describe('getHeadLinesOrError', function() {
   it('should give an error or the required headlines of the given file', function() {
-    const expected = [console.error, 'head: file1: No such file or directory'];
+    const expected = 'head: file1: No such file or directory';
     const cmdLineArgs = ['-n', '2', 'file1'];
+    const displayOutput = function() {
+      return 'head: file1: No such file or directory';
+    };
     assert.deepStrictEqual(
-      getHeadLinesOrError(cmdLineArgs, console.log, console.error, readFileSync, existsSync),
+      getHeadLinesOrError(cmdLineArgs, displayOutput, readFileSync, existsSync),
       expected
     );
   });
@@ -22,15 +25,16 @@ describe('getHeadLinesOrError', function() {
     const readFunc = function() {
       return 'fileContents';
     };
-
     const existsFunc = function() {
       return true;
     };
-
-    const expected = [console.log, 'fileContents'];
+    const displayOutput = function() {
+      return 'fileContents';
+    };
+    const expected = 'fileContents';
     const cmdLineArgs = ['-n', '2', 'file1'];
     assert.deepStrictEqual(
-      getHeadLinesOrError(cmdLineArgs, console.log, console.error, readFunc, existsFunc),
+      getHeadLinesOrError(cmdLineArgs, displayOutput, readFunc, existsFunc),
       expected
     );
   });

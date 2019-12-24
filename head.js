@@ -1,13 +1,15 @@
 const fs = require('fs');
 const { readFileSync, existsSync } = fs;
 const { getHeadLinesOrError } = require('./src/headOperation');
+const { stdout, stderr } = require('process');
 
 const main = function() {
-  const userInput = process.argv.slice(2);
-  const func1 = console.log;
-  const func2 = console.error;
-  const [funcRef, result] = getHeadLinesOrError(userInput, func1, func2, readFileSync, existsSync);
-  funcRef(result);
+  const cmdLineArgs = process.argv.slice(2);
+  const displayOutput = function(output) {
+    output.error && stderr.write(output.error);
+    output.headLines && stdout.write(output.headLines);
+  };
+  getHeadLinesOrError(cmdLineArgs, displayOutput, readFileSync, existsSync);
 };
 
 main();

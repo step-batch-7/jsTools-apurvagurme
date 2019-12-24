@@ -9,10 +9,10 @@ class Head {
   getFileContents(path) {
     if (this.isExistFunc(path)) {
       const contents = this.readFunc(path, 'utf8');
-      return { lines: contents };
+      return { lines: contents, error: undefined };
     }
     const error = `head: ${path}: No such file or directory`;
-    return { error };
+    return { lines: undefined, error };
   }
 
   extractFirstNLines(contents) {

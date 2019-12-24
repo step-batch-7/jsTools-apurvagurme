@@ -21,7 +21,8 @@ describe('HEAD', function() {
       const path = 'path';
       const head = new Head(readFileSync, existsSync, path);
       assert.deepStrictEqual(head.getFileContents(path), {
-        error: 'head: path: No such file or directory'
+        error: 'head: path: No such file or directory',
+        lines: undefined
       });
     });
 
@@ -37,7 +38,8 @@ describe('HEAD', function() {
 
       const head = new Head(readFunc, existsFunc, path);
       assert.deepStrictEqual(head.getFileContents(path), {
-        lines: 'fileContents'
+        lines: 'fileContents',
+        error: undefined
       });
     });
   });

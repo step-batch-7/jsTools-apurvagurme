@@ -2,7 +2,7 @@ const Head = require('./headLib.js');
 
 const parseCmdLineArgs = function(cmdLineArgs) {
   const parsedCmdLineArgs = {};
-  if (cmdLineArgs.includes('-n')) {
+  if (cmdLineArgs[0] == '-n') {
     parsedCmdLineArgs.requiredNoOfLines = cmdLineArgs[cmdLineArgs.indexOf('-n') + 1];
     parsedCmdLineArgs.filePath = cmdLineArgs.slice(cmdLineArgs.indexOf('-n') + 2);
   } else {
@@ -11,8 +11,9 @@ const parseCmdLineArgs = function(cmdLineArgs) {
   return parsedCmdLineArgs;
 };
 
-const getHeadLinesOrError = function(cmdLineArgs, outLog, errorLog, readFunc, existsFunc) {
+const getHeadLinesOrError = function(cmdLineArgs, displayOutput, readFunc, existsFunc) {
   const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs);
+  const result = {};
   const head = new Head(
     readFunc,
     existsFunc,
@@ -20,12 +21,13 @@ const getHeadLinesOrError = function(cmdLineArgs, outLog, errorLog, readFunc, ex
     parsedCmdLineArgs.requiredNoOfLines
   );
   const fileContents = head.getFileContents(parsedCmdLineArgs.filePath[0]);
-  if (fileContents.hasOwnProperty('lines')) {
-    const result = performHeadOperation(head, fileContents);
-    return [outLog, result];
+  if (fileContents.error == undefined) {
+    result['headLines'] = performHeadOperation(head, fileContents);
+    return displayOutput(result);
+  } else {
+    result['error'] = fileContents.error;
+    return displayOutput(result);
   }
-  const result = fileContents.error;
-  return [errorLog, result];
 };
 
 const performHeadOperation = function(head, fileContents) {
