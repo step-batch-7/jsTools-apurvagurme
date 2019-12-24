@@ -6,7 +6,7 @@ const parseCmdLineArgs = function(cmdLineArgs) {
     parsedCmdLineArgs.requiredNoOfLines = cmdLineArgs[1];
     parsedCmdLineArgs.filePath = cmdLineArgs[2];
   } else {
-    parsedCmdLineArgs.filePath = cmdLineArgs;
+    parsedCmdLineArgs.filePath = cmdLineArgs[0];
   }
   return parsedCmdLineArgs;
 };
@@ -20,7 +20,7 @@ const getHeadLinesOrError = function(cmdLineArgs, displayOutput, readFunc, exist
     parsedCmdLineArgs.filePath,
     parsedCmdLineArgs.requiredNoOfLines
   );
-  const fileContents = head.getFileContents(parsedCmdLineArgs.filePath[0]);
+  const fileContents = head.getFileContents(parsedCmdLineArgs.filePath);
   if (fileContents.error == undefined) {
     result['headLines'] = performHeadOperation(head, fileContents);
     return displayOutput(result);

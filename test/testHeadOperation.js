@@ -59,7 +59,7 @@ describe('parseCmdLineArgs', function() {
   describe('parseCmdLineArgs', function() {
     it('should give the userInputs', function() {
       const userInputs = ['file1'];
-      const expected = { filePath: ['file1'] };
+      const expected = { filePath: 'file1' };
       assert.deepStrictEqual(parseCmdLineArgs(userInputs), expected);
     });
   });
