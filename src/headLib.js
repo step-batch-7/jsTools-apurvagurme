@@ -1,11 +1,9 @@
-const fs = require('fs');
-
 class Head {
-  constructor(filePath, requiredNoOfLines = 10) {
+  constructor(readFunc, existsFunc, filePath, requiredNoOfLines = 10) {
     this.filePath = filePath;
     this.requiredNoOfLines = requiredNoOfLines;
-    this.readFunc = fs.readFileSync;
-    this.isExistFunc = fs.existsSync;
+    this.readFunc = readFunc;
+    this.isExistFunc = existsFunc;
   }
 
   getFileContents(path) {
@@ -17,20 +15,9 @@ class Head {
     return { error };
   }
 
-  separateAllLines(contents) {
-    const lines = contents.split('\n');
-    return lines;
-  }
-
   extractFirstNLines(contents) {
-    const firstNLines = contents.filter(
-      (oneLine, index) => index < this.requiredNoOfLines
-    );
+    const firstNLines = contents.filter((oneLine, index) => index < this.requiredNoOfLines);
     return firstNLines;
-  }
-
-  formatLines(requiredLines) {
-    return requiredLines.join('\n');
   }
 }
 
