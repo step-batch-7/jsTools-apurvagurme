@@ -1,0 +1,2 @@
+node head.js ./appTests/missing.txt 
+head: ./appTests/missing.txt: No such file or directory

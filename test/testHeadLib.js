@@ -14,22 +14,23 @@ describe('HEAD', function() {
       });
     });
   });
+
   describe('getFileContents', function() {
-    const head = new Head();
+    const path = 'path';
+    const head = new Head(path);
     const isExistFunc = function(path) {
       if (path === 'path') return true;
       return false;
     };
 
-    const readFunc2 = function(path, encoding) {
+    const readFunc2 = function() {
       return '';
     };
 
     it('should read the contents of the file in the given path', function() {
-      const path = 'path';
       assert.deepStrictEqual(
         head.getFileContents(path, readFunc2, isExistFunc),
-        { lines: '' }
+        { error: 'head: path: No such file or directory' }
       );
     });
   });

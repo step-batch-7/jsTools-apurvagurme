@@ -8,14 +8,13 @@ class Head {
     this.isExistFunc = fs.existsSync;
   }
 
-  getFileContents(path, readFunc, isExistFunc) {
-    if (isExistFunc(path)) {
-      const contents = readFunc(path, 'utf8');
+  getFileContents(path) {
+    if (this.isExistFunc(path)) {
+      const contents = this.readFunc(path, 'utf8');
       return { lines: contents };
     }
-    return {
-      error: `head: ${path}: No such file or directory`
-    };
+    const error = `head: ${path}: No such file or directory`;
+    return { error };
   }
 
   separateAllLines(contents) {

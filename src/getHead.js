@@ -2,41 +2,33 @@ const fs = require('fs');
 const Head = require('./headLib.js');
 
 const parseCmdLineArgs = function(cmdLineArgs) {
-  const parsedInput = {};
+  const parsedCmdLineArgs = {};
   if (cmdLineArgs.includes('-n')) {
-    parsedInput.requiredNoOfLines = cmdLineArgs[cmdLineArgs.indexOf('-n') + 1];
-    parsedInput.filePath = cmdLineArgs.slice(cmdLineArgs.indexOf('-n') + 2);
+    parsedCmdLineArgs.requiredNoOfLines = cmdLineArgs[cmdLineArgs.indexOf('-n') + 1];
+    parsedCmdLineArgs.filePath = cmdLineArgs.slice(cmdLineArgs.indexOf('-n') + 2);
   } else {
-    parsedInput.filePath = cmdLineArgs;
+    parsedCmdLineArgs.filePath = cmdLineArgs;
   }
-  return parsedInput;
+  return parsedCmdLineArgs;
 };
 
-const getHeadLinesOrError = function(userInput, outLog, errorLog) {
-  const parsedInput = parseCmdLineArgs(userInput);
-  const head = new Head(parsedInput.filePath, parsedInput.requiredNoOfLines);
-  const operation = head.getFileContents(
-    parsedInput.filePath[0],
-    fs.readFileSync,
-    fs.existsSync
-  );
-  if (operation.hasOwnProperty('lines')) {
-    const result = performHeadOperation(head, operation);
+const getHeadLinesOrError = function(cmdLineArgs, outLog, errorLog) {
+  const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs);
+  const head = new Head(parsedCmdLineArgs.filePath, parsedCmdLineArgs.requiredNoOfLines);
+  const fileContents = head.getFileContents(parsedCmdLineArgs.filePath[0], fs.readFileSync, fs.existsSync);
+  if (fileContents.hasOwnProperty('lines')) {
+    const result = performHeadOperation(head, fileContents);
     return [outLog, result];
   }
-  const result = operation.error;
+  const result = fileContents.error;
   return [errorLog, result];
 };
 
-const performHeadOperation = function(head, operation) {
-  const separatedLines = head.separateAllLines(operation.lines);
+const performHeadOperation = function(head, fileContents) {
+  const separatedLines = head.separateAllLines(fileContents.lines);
   const requiredLines = head.extractFirstNLines(separatedLines);
   const formattedLines = head.formatLines(requiredLines);
   return formattedLines;
 };
 
-module.exports = {
-  getHeadLinesOrError,
-  performHeadOperation,
-  parseCmdLineArgs
-};
+module.exports = { getHeadLinesOrError, performHeadOperation, parseCmdLineArgs };
