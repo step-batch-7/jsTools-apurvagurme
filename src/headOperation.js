@@ -3,8 +3,8 @@ const Head = require('./headLib.js');
 const parseCmdLineArgs = function(cmdLineArgs) {
   const parsedCmdLineArgs = {};
   if (cmdLineArgs[0] == '-n') {
-    parsedCmdLineArgs.requiredNoOfLines = cmdLineArgs[cmdLineArgs.indexOf('-n') + 1];
-    parsedCmdLineArgs.filePath = cmdLineArgs.slice(cmdLineArgs.indexOf('-n') + 2);
+    parsedCmdLineArgs.requiredNoOfLines = cmdLineArgs[1];
+    parsedCmdLineArgs.filePath = cmdLineArgs[2];
   } else {
     parsedCmdLineArgs.filePath = cmdLineArgs;
   }
@@ -24,10 +24,9 @@ const getHeadLinesOrError = function(cmdLineArgs, displayOutput, readFunc, exist
   if (fileContents.error == undefined) {
     result['headLines'] = performHeadOperation(head, fileContents);
     return displayOutput(result);
-  } else {
-    result['error'] = fileContents.error;
-    return displayOutput(result);
   }
+  result['error'] = fileContents.error;
+  return displayOutput(result);
 };
 
 const performHeadOperation = function(head, fileContents) {

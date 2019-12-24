@@ -52,7 +52,7 @@ describe('performHeadOperation', function() {
 describe('parseCmdLineArgs', function() {
   it('should give the userInputs', function() {
     const userInputs = ['-n', '2', 'file1'];
-    const expected = { filePath: ['file1'], requiredNoOfLines: '2' };
+    const expected = { filePath: 'file1', requiredNoOfLines: '2' };
     assert.deepStrictEqual(parseCmdLineArgs(userInputs), expected);
   });
 
