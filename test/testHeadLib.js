@@ -11,7 +11,7 @@ describe('HEAD', function() {
         readFunc: fs.readFileSync,
         isExistFunc: fs.existsSync,
         filePath: ['./file1'],
-        requiredNoOfLines: 10
+        requiredNoOfLines: undefined
       });
     });
   });
@@ -22,7 +22,7 @@ describe('HEAD', function() {
       const head = new Head(readFileSync, existsSync, path);
       assert.deepStrictEqual(head.getFileContents(path), {
         error: 'head: path: No such file or directory',
-        lines: undefined
+        lines: ''
       });
     });
 
@@ -39,7 +39,7 @@ describe('HEAD', function() {
       const head = new Head(readFunc, existsFunc, path);
       assert.deepStrictEqual(head.getFileContents(path), {
         lines: 'fileContents',
-        error: undefined
+        error: ''
       });
     });
   });
@@ -47,7 +47,7 @@ describe('HEAD', function() {
   describe('extractFirstNLines', function() {
     it('should give the default 10 elements if required number of lines is not given', function() {
       const path = 'path';
-      const head = new Head(readFileSync, existsSync, path);
+      const head = new Head(readFileSync, existsSync, path, 10);
       const fileContents = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
       const expected = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
       assert.deepStrictEqual(head.extractFirstNLines(fileContents), expected);
@@ -55,7 +55,7 @@ describe('HEAD', function() {
 
     it('should give all elements if total number of elements are less than 10 required number of lines is not given', function() {
       const path = 'path';
-      const head = new Head(readFileSync, existsSync, path);
+      const head = new Head(readFileSync, existsSync, path, 10);
       const fileContents = ['1', '2', '3'];
       const expected = ['1', '2', '3'];
       assert.deepStrictEqual(head.extractFirstNLines(fileContents), expected);

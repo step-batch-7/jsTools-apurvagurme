@@ -5,11 +5,9 @@ const { stdout, stderr } = require('process');
 
 const main = function() {
   const cmdLineArgs = process.argv.slice(2);
-  const displayOutput = function(output) {
-    output.error && stderr.write(output.error);
-    output.headLines && stdout.write(output.headLines);
-  };
-  getHeadLinesOrError(cmdLineArgs, displayOutput, readFileSync, existsSync);
+  const output = getHeadLinesOrError(cmdLineArgs, readFileSync, existsSync);
+  stderr.write(output.error);
+  stdout.write(output.headLines);
 };
 
 main();

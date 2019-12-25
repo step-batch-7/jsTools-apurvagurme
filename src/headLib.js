@@ -1,5 +1,5 @@
 class Head {
-  constructor(readFunc, existsFunc, filePath, requiredNoOfLines = 10) {
+  constructor(readFunc, existsFunc, filePath, requiredNoOfLines) {
     this.filePath = filePath;
     this.requiredNoOfLines = requiredNoOfLines;
     this.readFunc = readFunc;
@@ -7,12 +7,14 @@ class Head {
   }
 
   getFileContents(path) {
-    if (this.isExistFunc(path)) {
-      const contents = this.readFunc(path, 'utf8');
-      return { lines: contents, error: undefined };
+    const content = { error: '', lines: '' };
+    if (!this.isExistFunc(path)) {
+      content.error = `head: ${path}: No such file or directory`;
+      return content;
     }
-    const error = `head: ${path}: No such file or directory`;
-    return { lines: undefined, error };
+    const contents = this.readFunc(path, 'utf8');
+    content.lines = contents;
+    return content;
   }
 
   extractFirstNLines(contents) {

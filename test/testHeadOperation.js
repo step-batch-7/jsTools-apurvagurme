@@ -10,15 +10,9 @@ const { readFileSync, existsSync } = fs;
 
 describe('getHeadLinesOrError', function() {
   it('should give an error or the required headlines of the given file', function() {
-    const expected = 'head: file1: No such file or directory';
+    const expected = { error: 'head: file1: No such file or directory', headLines: '' };
     const cmdLineArgs = ['-n', '2', 'file1'];
-    const displayOutput = function() {
-      return 'head: file1: No such file or directory';
-    };
-    assert.deepStrictEqual(
-      getHeadLinesOrError(cmdLineArgs, displayOutput, readFileSync, existsSync),
-      expected
-    );
+    assert.deepStrictEqual(getHeadLinesOrError(cmdLineArgs, readFileSync, existsSync), expected);
   });
 
   it('should give an error or the required headlines of the given file', function() {
@@ -28,21 +22,15 @@ describe('getHeadLinesOrError', function() {
     const existsFunc = function() {
       return true;
     };
-    const displayOutput = function() {
-      return 'fileContents';
-    };
-    const expected = 'fileContents';
+    const expected = { error: '', headLines: 'fileContents' };
     const cmdLineArgs = ['-n', '2', 'file1'];
-    assert.deepStrictEqual(
-      getHeadLinesOrError(cmdLineArgs, displayOutput, readFunc, existsFunc),
-      expected
-    );
+    assert.deepStrictEqual(getHeadLinesOrError(cmdLineArgs, readFunc, existsFunc), expected);
   });
 });
 
 describe('performHeadOperation', function() {
   it('should give the result of head operation', function() {
-    const head = new Head();
+    const head = new Head('readFunc', 'existsFunc', 'filePath', 10);
     const operation = { lines: 'one\ntwo' };
     const actual = performHeadOperation(head, operation);
     assert.strictEqual(actual, 'one\ntwo');
@@ -56,11 +44,9 @@ describe('parseCmdLineArgs', function() {
     assert.deepStrictEqual(parseCmdLineArgs(userInputs), expected);
   });
 
-  describe('parseCmdLineArgs', function() {
-    it('should give the userInputs', function() {
-      const userInputs = ['file1'];
-      const expected = { filePath: 'file1' };
-      assert.deepStrictEqual(parseCmdLineArgs(userInputs), expected);
-    });
+  it('should give the userInputs', function() {
+    const userInputs = ['file1'];
+    const expected = { filePath: 'file1', requiredNoOfLines: 10 };
+    assert.deepStrictEqual(parseCmdLineArgs(userInputs), expected);
   });
 });
