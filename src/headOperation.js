@@ -24,18 +24,12 @@ const getHeadLinesOrError = function(cmdLineArgs, readFunc, existsFunc) {
   );
   const fileContents = head.getFileContents(parsedCmdLineArgs.filePath);
   if (fileContents.error == '') {
-    result.headLines = performHeadOperation(head, fileContents);
+    const requiredLines = head.extractFirstNLines(fileContents.lines.split('\n')).join('\n');
+    result.headLines = requiredLines;
     return result;
   }
   result.error = fileContents.error;
   return result;
 };
 
-const performHeadOperation = function(head, fileContents) {
-  const separatedLines = fileContents.lines.split('\n');
-  const requiredLines = head.extractFirstNLines(separatedLines);
-  const formattedLines = requiredLines.join('\n');
-  return formattedLines;
-};
-
-module.exports = { getHeadLinesOrError, performHeadOperation, parseCmdLineArgs };
+module.exports = { getHeadLinesOrError, parseCmdLineArgs };

@@ -18,7 +18,7 @@ class Head {
   }
 
   extractFirstNLines(contents) {
-    const firstNLines = contents.filter((oneLine, index) => index < this.requiredNoOfLines);
+    const firstNLines = contents.slice(0, this.requiredNoOfLines);
     return firstNLines;
   }
 }

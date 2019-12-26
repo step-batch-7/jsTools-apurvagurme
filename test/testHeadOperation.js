@@ -1,10 +1,5 @@
-const {
-  getHeadLinesOrError,
-  performHeadOperation,
-  parseCmdLineArgs
-} = require('../src/headOperation');
+const { getHeadLinesOrError, parseCmdLineArgs } = require('../src/headOperation');
 const { assert } = require('chai');
-const Head = require('../src/headLib');
 const fs = require('fs');
 const { readFileSync, existsSync } = fs;
 
@@ -28,23 +23,14 @@ describe('getHeadLinesOrError', function() {
   });
 });
 
-describe('performHeadOperation', function() {
-  it('should give the result of head operation', function() {
-    const head = new Head('readFunc', 'existsFunc', 'filePath', 10);
-    const operation = { lines: 'one\ntwo' };
-    const actual = performHeadOperation(head, operation);
-    assert.strictEqual(actual, 'one\ntwo');
-  });
-});
-
 describe('parseCmdLineArgs', function() {
-  it('should give the userInputs', function() {
+  it('should give the given file name and required number of lines in an object', function() {
     const userInputs = ['-n', '2', 'file1'];
     const expected = { filePath: 'file1', requiredNoOfLines: '2' };
     assert.deepStrictEqual(parseCmdLineArgs(userInputs), expected);
   });
 
-  it('should give the userInputs', function() {
+  it('should give the given file and the default number of lines required', function() {
     const userInputs = ['file1'];
     const expected = { filePath: 'file1', requiredNoOfLines: 10 };
     assert.deepStrictEqual(parseCmdLineArgs(userInputs), expected);
