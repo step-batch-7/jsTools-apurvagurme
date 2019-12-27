@@ -1,6 +1,6 @@
 const Head = require('./headLib.js');
 
-const performOpt = function(cmdLineArgs, fs, process) {
+const performHead = function(cmdLineArgs, fs, process) {
   if (cmdLineArgs.length == 0) {
     const head = new Head(fs.readFileSync, fs.existsSync, '', 10);
     getStdInput(process, head);
@@ -11,6 +11,7 @@ const performOpt = function(cmdLineArgs, fs, process) {
 
 const getStdInput = function(process, head) {
   const { stdout, stderr, stdin } = process;
+  stdin.setEncoding('utf8');
   let count = 1;
   stdin.on('data', data => {
     if (count >= 10) {
@@ -62,4 +63,4 @@ const extractHeadLines = function(lines, head) {
   return result;
 };
 
-module.exports = { getHeadLines, parseCmdLineArgs, extractHeadLines, performOpt };
+module.exports = { getHeadLines, parseCmdLineArgs, extractHeadLines, performHead };
