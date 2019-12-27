@@ -1,7 +1,7 @@
-const { getHeadLines, parseCmdLineArgs } = require('../src/headOperation');
+const { extractHeadLines, getHeadLines, parseCmdLineArgs } = require('../src/headOperation');
 const { assert } = require('chai');
 const fs = require('fs');
-const { readFileSync, existsSync } = fs;
+const Head = require('../src/headLib');
 
 describe('getHeadLines', function() {
   it('should give an error or the required headlines of the given file', function() {
@@ -35,5 +35,15 @@ describe('parseCmdLineArgs', function() {
     const userInputs = ['file1'];
     const expected = { filePath: 'file1', requiredNoOfLines: 10 };
     assert.deepStrictEqual(parseCmdLineArgs(userInputs), expected);
+  });
+});
+
+describe('extractHeadLines', function() {
+  it('should give first N lines', function() {
+    const head = new Head();
+    const lines = 'file\ncontents';
+    const actual = extractHeadLines(lines, head);
+    const expected = { error: '', lines: 'file\ncontents' };
+    assert.deepStrictEqual(actual, expected);
   });
 });
