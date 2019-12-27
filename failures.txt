@@ -1,10 +1,100 @@
+---------./appTests/req_00_default_head.test----------
+			<= command =>
+node head.js ./appTests/file1.txt
+
+			<= actual output =>
+
+One
+Two
+Three
+Four
+Five
+Six
+Seven
+Eight
+Nine
+Ten
+			<= expected output =>
+One
+Two
+Three
+Four
+Five
+Six
+Seven
+Eight
+Nine
+Ten
+---------./appTests/req_01_noOfLines_option.test----------
+			<= command =>
+node head.js -n 2 ./appTests/file2.txt 
+
+			<= actual output =>
+
+One
+Two
+			<= expected output =>
+One
+Two
+---------./appTests/req_02_missing_file_error.test----------
+			<= command =>
+node head.js ./appTests/missing.txt 
+
+			<= actual output =>
+head: ./appTests/missing.txt: No such file or directoryhead: ./appTests/missing.txt: No such file or directory
+events.js:187
+      throw er; // Unhandled 'error' event
+      ^
+
+TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be one of type string or Buffer. Received type undefined
+    at validChunk (_stream_writable.js:268:10)
+    at SyncWriteStream.Writable.write (_stream_writable.js:303:21)
+    at main (/Users/step28/terminal/java_script/jsTools-apurvagurme/head.js:11:18)
+    at Object.<anonymous> (/Users/step28/terminal/java_script/jsTools-apurvagurme/head.js:14:1)
+    at Module._compile (internal/modules/cjs/loader.js:959:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:995:10)
+    at Module.load (internal/modules/cjs/loader.js:815:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:727:14)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:1047:10)
+    at internal/main/run_main_module.js:17:11
+Emitted 'error' event on SyncWriteStream instance at:
+    at emitErrorNT (internal/streams/destroy.js:92:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:60:3)
+    at processTicksAndRejections (internal/process/task_queues.js:80:21) {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
+
+			<= expected output =>
+head: ./appTests/missing.txt: No such file or directory
+---------./appTests/req_03_empty_file.test----------
+			<= command =>
+node head.js ./appTests/empty.txt
+
+			<= actual output =>
+
+
+			<= expected output =>
 ---------./appTests/req_04_standardIput_with_default.test----------
 			<= command =>
 cat file1 | node head.js 
 
 			<= actual output =>
 cat: file1: No such file or directory
-head: undefined: No such file or directory
+/Users/step28/terminal/java_script/jsTools-apurvagurme/src/headOperation.js:6
+    getStdInput(process, head);
+    ^
+
+ReferenceError: getStdInput is not defined
+    at performOpt (/Users/step28/terminal/java_script/jsTools-apurvagurme/src/headOperation.js:6:5)
+    at main (/Users/step28/terminal/java_script/jsTools-apurvagurme/head.js:8:28)
+    at Object.<anonymous> (/Users/step28/terminal/java_script/jsTools-apurvagurme/head.js:14:1)
+    at Module._compile (internal/modules/cjs/loader.js:959:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:995:10)
+    at Module.load (internal/modules/cjs/loader.js:815:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:727:14)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:1047:10)
+    at internal/main/run_main_module.js:17:11
+
 			<= expected output =>
 One
 Two
@@ -22,7 +112,29 @@ cat file1 | node head.js -n 2
 
 			<= actual output =>
 cat: file1: No such file or directory
-head: undefined: No such file or directory
+head: undefined: No such file or directoryhead: undefined: No such file or directory
+events.js:187
+      throw er; // Unhandled 'error' event
+      ^
+
+TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be one of type string or Buffer. Received type undefined
+    at validChunk (_stream_writable.js:268:10)
+    at SyncWriteStream.Writable.write (_stream_writable.js:303:21)
+    at main (/Users/step28/terminal/java_script/jsTools-apurvagurme/head.js:11:18)
+    at Object.<anonymous> (/Users/step28/terminal/java_script/jsTools-apurvagurme/head.js:14:1)
+    at Module._compile (internal/modules/cjs/loader.js:959:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:995:10)
+    at Module.load (internal/modules/cjs/loader.js:815:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:727:14)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:1047:10)
+    at internal/main/run_main_module.js:17:11
+Emitted 'error' event on SyncWriteStream instance at:
+    at emitErrorNT (internal/streams/destroy.js:92:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:60:3)
+    at processTicksAndRejections (internal/process/task_queues.js:80:21) {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
+
 			<= expected output =>
 One
 Two

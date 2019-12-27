@@ -1,11 +1,16 @@
-const { extractHeadLines, getHeadLines, parseCmdLineArgs } = require('../src/headOperation');
+const {
+  extractHeadLines,
+  getHeadLines,
+  parseCmdLineArgs,
+  performOpt
+} = require('../src/headOperation');
 const { assert } = require('chai');
 const fs = require('fs');
 const Head = require('../src/headLib');
 
 describe('getHeadLines', function() {
   it('should give an error or the required headlines of the given file', function() {
-    const expected = { error: 'head: file1: No such file or directory', headLines: '' };
+    const expected = { error: 'head: file1: No such file or directory', lines: '' };
     const cmdLineArgs = ['-n', '2', 'file1'];
     assert.deepStrictEqual(getHeadLines(cmdLineArgs, fs), expected);
   });
@@ -46,4 +51,31 @@ describe('extractHeadLines', function() {
     const expected = { error: '', lines: 'file\ncontents' };
     assert.deepStrictEqual(actual, expected);
   });
+});
+
+describe('performOpt', function() {
+  const readFileSync = function() {
+    return 'fileContents';
+  };
+  const existsSync = function() {
+    return true;
+  };
+  const stdout = function() {
+    console.log('fileContents');
+  };
+  const stdin = function() {
+    return true;
+  };
+  const stderr = function() {
+    return false;
+  };
+  const process = { stdin, stdout, stderr };
+  const fs = { readFileSync, existsSync };
+  it('should give the end result when standard input is not given', function() {
+    const cmdLineArgs = ['file1'];
+    const actual = performOpt(cmdLineArgs, fs, process);
+    const expected = { error: '', lines: 'fileContents' };
+    assert.deepStrictEqual(actual, expected);
+  });
+  it('should give the headLines when standard input is given', function() {});
 });

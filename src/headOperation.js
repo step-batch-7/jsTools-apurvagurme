@@ -1,5 +1,14 @@
 const Head = require('./headLib.js');
 
+const performOpt = function(cmdLineArgs, fs, process) {
+  if (cmdLineArgs.length == 0) {
+    const head = new Head('', '', '', 10);
+    getStdInput(process, head);
+    return { error: '', lines: '' };
+  }
+  return getHeadLines(cmdLineArgs, fs);
+};
+
 const parseCmdLineArgs = function(cmdLineArgs) {
   const parsedCmdLineArgs = {};
   let filePath = cmdLineArgs[0];
@@ -15,7 +24,7 @@ const parseCmdLineArgs = function(cmdLineArgs) {
 
 const getHeadLines = function(cmdLineArgs, fs) {
   const { readFileSync, existsSync } = fs;
-  const result = { error: '', headLines: '' };
+  const result = { error: '', lines: '' };
   const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs);
   const head = new Head(
     readFileSync,
@@ -39,4 +48,4 @@ const extractHeadLines = function(lines, head) {
   return result;
 };
 
-module.exports = { getHeadLines, parseCmdLineArgs, extractHeadLines };
+module.exports = { getHeadLines, parseCmdLineArgs, extractHeadLines, performOpt };

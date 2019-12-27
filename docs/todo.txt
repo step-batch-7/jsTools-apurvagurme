@@ -25,6 +25,7 @@ v.[0.1] node head.js file1
 v.[0.2] cat file1 | node head.js 
         cat file1 | node head.js -n 2
 
-* extract the things required for both standard input and filename into a separate function
+* extract the things required for both standard input and filename into a separate function --done--
+  implement check whether standard input is given or not Function 
   take the standard input 
   connect the standard input to perform head operation using the previous functions      
