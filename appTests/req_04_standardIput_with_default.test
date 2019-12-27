@@ -1,4 +1,4 @@
-cat file1 | node head.js 
+cat ./appTests/file1.txt | node head.js
 One
 Two
 Three

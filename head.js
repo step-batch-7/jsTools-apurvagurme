@@ -6,7 +6,6 @@ process.stdin.setEncoding('utf8');
 const main = function() {
   const cmdLineArgs = process.argv.slice(2);
   const { error, lines } = performOpt(cmdLineArgs, fs, process);
-  // console.log(lines);
   process.stderr.write(error);
   process.stdout.write(lines);
 };
