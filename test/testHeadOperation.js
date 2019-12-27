@@ -1,25 +1,26 @@
-const { getHeadLinesOrError, parseCmdLineArgs } = require('../src/headOperation');
+const { getHeadLines, parseCmdLineArgs } = require('../src/headOperation');
 const { assert } = require('chai');
 const fs = require('fs');
 const { readFileSync, existsSync } = fs;
 
-describe('getHeadLinesOrError', function() {
+describe('getHeadLines', function() {
   it('should give an error or the required headlines of the given file', function() {
     const expected = { error: 'head: file1: No such file or directory', headLines: '' };
     const cmdLineArgs = ['-n', '2', 'file1'];
-    assert.deepStrictEqual(getHeadLinesOrError(cmdLineArgs, readFileSync, existsSync), expected);
+    assert.deepStrictEqual(getHeadLines(cmdLineArgs, fs), expected);
   });
 
   it('should give an error or the required headlines of the given file', function() {
-    const readFunc = function() {
+    const readFileSync = function() {
       return 'fileContents';
     };
-    const existsFunc = function() {
+    const existsSync = function() {
       return true;
     };
-    const expected = { error: '', headLines: 'fileContents' };
+    const fs = { readFileSync, existsSync };
+    const expected = { error: '', lines: 'fileContents' };
     const cmdLineArgs = ['-n', '2', 'file1'];
-    assert.deepStrictEqual(getHeadLinesOrError(cmdLineArgs, readFunc, existsFunc), expected);
+    assert.deepStrictEqual(getHeadLines(cmdLineArgs, fs), expected);
   });
 });
 

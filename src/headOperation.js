@@ -13,23 +13,30 @@ const parseCmdLineArgs = function(cmdLineArgs) {
   return parsedCmdLineArgs;
 };
 
-const getHeadLinesOrError = function(cmdLineArgs, readFunc, existsFunc) {
+const getHeadLines = function(cmdLineArgs, fs) {
+  const { readFileSync, existsSync } = fs;
   const result = { error: '', headLines: '' };
   const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs);
   const head = new Head(
-    readFunc,
-    existsFunc,
+    readFileSync,
+    existsSync,
     parsedCmdLineArgs.filePath,
     parsedCmdLineArgs.requiredNoOfLines
   );
   const fileContents = head.getFileContents(parsedCmdLineArgs.filePath);
   if (fileContents.error == '') {
-    const requiredLines = head.extractFirstNLines(fileContents.lines.split('\n')).join('\n');
-    result.headLines = requiredLines;
+    const result = extractHeadLines(fileContents.lines, head);
     return result;
   }
   result.error = fileContents.error;
   return result;
 };
 
-module.exports = { getHeadLinesOrError, parseCmdLineArgs };
+const extractHeadLines = function(lines, head) {
+  const result = { error: '', lines: '' };
+  const requiredLines = head.extractFirstNLines(lines.split('\n')).join('\n');
+  result.lines = requiredLines;
+  return result;
+};
+
+module.exports = { getHeadLines, parseCmdLineArgs, extractHeadLines };

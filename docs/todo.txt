@@ -18,4 +18,13 @@ v.[0.1] node head.js file1
         display the n Lines --done--
     
 ------------------------------------------------------------------------------------------    
-* Changes required for implementation of -n option
+* Changes required for implementation of -n option --done--
+
+------------------------------------------------------------------------------------------    
+
+v.[0.2] cat file1 | node head.js 
+        cat file1 | node head.js -n 2
+
+* extract the things required for both standard input and filename into a separate function
+  take the standard input 
+  connect the standard input to perform head operation using the previous functions      

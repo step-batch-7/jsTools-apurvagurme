@@ -181,7 +181,7 @@ input => arrays of strings: filenames
 
 name => getFileContents
 
-[6.4] b) file dosen't exists
+[6.4] b) file doesn't exists
 output => string: missing file message  
     head: filename: No such file or directory
 

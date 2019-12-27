@@ -1,0 +1,11 @@
+cat file1 | node head.js 
+One
+Two
+Three
+Four
+Five
+Six
+Seven
+Eight
+Nine
+Ten

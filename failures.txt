@@ -1,0 +1,28 @@
+---------./appTests/req_04_standardIput_with_default.test----------
+			<= command =>
+cat file1 | node head.js 
+
+			<= actual output =>
+cat: file1: No such file or directory
+head: undefined: No such file or directory
+			<= expected output =>
+One
+Two
+Three
+Four
+Five
+Six
+Seven
+Eight
+Nine
+Ten
+---------./appTests/req_05_standardInput_with_option.test----------
+			<= command =>
+cat file1 | node head.js -n 2
+
+			<= actual output =>
+cat: file1: No such file or directory
+head: undefined: No such file or directory
+			<= expected output =>
+One
+Two

@@ -14,6 +14,7 @@ describe('HEAD', function() {
         requiredNoOfLines: undefined
       });
     });
+
     it('should give an instance of the head class in the expected format', function() {
       const head = new Head(readFileSync, existsSync, ['./file1'], 10);
       assert.deepStrictEqual(head, {
