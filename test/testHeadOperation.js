@@ -74,14 +74,12 @@ describe('performHead', function() {
 
 describe('extractFirstNLines', function() {
   it('should give the default 10 elements if required number of lines is not given', function() {
-    const path = 'path';
     const fileContents = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
     const expected = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     assert.deepStrictEqual(extractFirstNLines(fileContents, 10), expected);
   });
 
   it('should give all elements if total number of elements are less than 10 required number of lines is not given', function() {
-    const path = 'path';
     const fileContents = ['1', '2', '3'];
     const expected = ['1', '2', '3'];
     assert.deepStrictEqual(extractFirstNLines(fileContents), expected);
@@ -90,10 +88,11 @@ describe('extractFirstNLines', function() {
 
 describe('stdInput', function() {
   it('should get standard input and display', function() {
+    const requiredNoOfLines = 10;
     const display = function(output) {
       assert.equal(output.error, '');
       assert.equal(output.lines, 'file\nContents');
     };
-    stdInput(null, 'file\nContents', display, 10);
+    stdInput(null, 'file\nContents', { display, requiredNoOfLines });
   });
 });

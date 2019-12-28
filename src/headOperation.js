@@ -36,7 +36,8 @@ const getFileContents = function(parsedCmdLineArgs, display, fs) {
 
 const stdInput = function(err, data, { display, requiredNoOfLines }) {
   if (err) {
-    return;
+    const result = { error: err, lines: '' };
+    display(result);
   }
   const content = { error: '', lines: '' };
   const splitted = data.split('\n');
