@@ -1,14 +1,14 @@
-const performHead = function(cmdLineArgs, fs, process, display) {
+const performHead = function(cmdLineArgs, fs, display) {
   getHeadLines(cmdLineArgs, fs, display);
 };
 
 const parseCmdLineArgs = function(cmdLineArgs) {
   const parsedCmdLineArgs = {};
-  let filePath = cmdLineArgs[0];
+  const indexOfFirstElement = 0;
+  let filePath = cmdLineArgs[indexOfFirstElement];
   let requiredNoOfLines = 10;
-  if (cmdLineArgs[0] == '-n') {
-    requiredNoOfLines = cmdLineArgs[1];
-    filePath = cmdLineArgs[2];
+  if (cmdLineArgs[indexOfFirstElement] === '-n') {
+    [, requiredNoOfLines, filePath] = cmdLineArgs;
   }
   parsedCmdLineArgs.filePath = filePath;
   parsedCmdLineArgs.requiredNoOfLines = requiredNoOfLines;
@@ -16,30 +16,37 @@ const parseCmdLineArgs = function(cmdLineArgs) {
 };
 
 const getHeadLines = function(cmdLineArgs, fs, display) {
-  const { readFile, existsSync } = fs;
   const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs);
-  getFileContents(parsedCmdLineArgs, display, existsSync, readFile);
+  getFileContents(parsedCmdLineArgs, display, fs);
 };
 
-const getFileContents = function(parsedCmdLineArgs, display, isExistFunc, readFile) {
+const getFileContents = function(parsedCmdLineArgs, display, fs) {
+  const { readFile, existsSync } = fs;
   const { filePath, requiredNoOfLines } = parsedCmdLineArgs;
   const content = { error: '', lines: '' };
-  if (!isExistFunc(filePath)) {
+  if (!existsSync(filePath)) {
     content.error = `head: ${filePath}: No such file or directory`;
     display(content);
     return;
   }
-  readFile(filePath, 'utf8', (err, data) => stdInput(err, data, display, requiredNoOfLines));
+  readFile(filePath, 'utf8', (err, data) => {
+    stdInput(err, data, { display, requiredNoOfLines });
+  });
 };
 
-const stdInput = function(err, data, display, requiredNoOfLines) {
+const stdInput = function(err, data, { display, requiredNoOfLines }) {
+  if (err) {
+    return;
+  }
   const content = { error: '', lines: '' };
-  content.lines = extractFirstNLines(data.split('\n'), requiredNoOfLines).join('\n');
+  const splitted = data.split('\n');
+  content.lines = extractFirstNLines(splitted, requiredNoOfLines).join('\n');
   display(content);
 };
 
 const extractFirstNLines = function(contents, requiredNoOfLines) {
-  const firstNLines = contents.slice(0, requiredNoOfLines);
+  const indexOfFirstLine = 0;
+  const firstNLines = contents.slice(indexOfFirstLine, requiredNoOfLines);
   return firstNLines;
 };
 

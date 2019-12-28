@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { stderr, stdout, stdin } = process;
 const { readFile, existsSync } = fs;
 const { performHead } = require('./src/headOperation');
 
@@ -9,8 +8,8 @@ const display = function({ error, lines }) {
 };
 
 const main = function() {
-  const cmdLineArgs = process.argv.slice(2);
-  performHead(cmdLineArgs, { readFile, existsSync }, { stderr, stdout, stdin }, display);
+  const [, , ...cmdLineArgs] = process.argv;
+  performHead(cmdLineArgs, { readFile, existsSync }, display);
 };
 
 main();
