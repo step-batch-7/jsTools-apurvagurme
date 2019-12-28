@@ -29,3 +29,9 @@ v.[0.2] cat file1 | node head.js
   implement check whether standard input is given or not Function --done--   
   take the standard input --done--
   connect the standard input to perform head operation using the previous functions --done--     
+
+------------------------------------------------------------------------------------------    
+
+* Change readFileSync to readFile (synchronous to asynchronous)
+  For that first remove the Head class 
+  Create a callback for the readFile to perform head operation     

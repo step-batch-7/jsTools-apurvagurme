@@ -1,34 +1,36 @@
 const {
-  extractHeadLines,
+  extractFirstNLines,
   getHeadLines,
   parseCmdLineArgs,
-  performHead
+  performHead,
+  stdInput
 } = require('../src/headOperation');
 const { assert } = require('chai');
 const fs = require('fs');
-const Head = require('../src/headLib');
-const { EventEmitter } = require('events');
-const { stderr, stdout } = process;
-const sinon = require('sinon');
 
 describe('getHeadLines', function() {
   it('should give an error or the required headlines of the given file', function() {
-    const expected = { error: 'head: file1: No such file or directory', lines: '' };
+    const expected = undefined;
     const cmdLineArgs = ['-n', '2', 'file1'];
-    assert.deepStrictEqual(getHeadLines(cmdLineArgs, fs), expected);
+    const display = function(output) {
+      assert.equal(output.error, 'head: file1: No such file or directory');
+      assert.equal(output.lines, '');
+    };
+    assert.deepStrictEqual(getHeadLines(cmdLineArgs, fs, display), expected);
   });
 
   it('should give an error or the required headlines of the given file', function() {
-    const readFileSync = function() {
+    const readFile = function() {
       return 'fileContents';
     };
     const existsSync = function() {
       return true;
     };
-    const fs = { readFileSync, existsSync };
-    const expected = { error: '', lines: 'fileContents' };
+    const display = function() {};
+    const fs = { readFile, existsSync };
+    const expected = undefined;
     const cmdLineArgs = ['-n', '2', 'file1'];
-    assert.deepStrictEqual(getHeadLines(cmdLineArgs, fs), expected);
+    assert.deepStrictEqual(getHeadLines(cmdLineArgs, fs, display), expected);
   });
 });
 
@@ -46,41 +48,52 @@ describe('parseCmdLineArgs', function() {
   });
 });
 
-describe('extractHeadLines', function() {
-  it('should give first N lines', function() {
-    const head = new Head();
-    const lines = 'file\ncontents';
-    const actual = extractHeadLines(lines, head);
-    const expected = { error: '', lines: 'file\ncontents' };
+describe('performHead', function() {
+  const readFile = function() {
+    return 'fileContents';
+  };
+
+  const existsSync = function() {
+    return true;
+  };
+
+  const display = function(output) {
+    assert.equal(output.error, 'head: file1: No such file or directory');
+    assert.equal(output.lines, '');
+  };
+
+  const fs = { readFile, existsSync };
+  const process = {};
+  it('should give the end result when standard input is not given', function() {
+    const cmdLineArgs = ['file1'];
+    const actual = performHead(cmdLineArgs, fs, process, display);
+    const expected = undefined;
     assert.deepStrictEqual(actual, expected);
   });
 });
 
-describe('performHead', function() {
-  const readFileSync = function() {
-    return 'fileContents';
-  };
-  const existsSync = function() {
-    return true;
-  };
-  const fs = { readFileSync, existsSync };
-
-  it('should give the end result when standard input is not given', function() {
-    const cmdLineArgs = ['file1'];
-    const actual = performHead(cmdLineArgs, fs, process);
-    const expected = { error: '', lines: 'fileContents' };
-    assert.deepStrictEqual(actual, expected);
+describe('extractFirstNLines', function() {
+  it('should give the default 10 elements if required number of lines is not given', function() {
+    const path = 'path';
+    const fileContents = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
+    const expected = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    assert.deepStrictEqual(extractFirstNLines(fileContents, 10), expected);
   });
 
-  it('should give the headLines when standard input is given', function() {
-    let stdinStream = new EventEmitter();
-    stdinStream.setEncoding = sinon.spy();
-    let stream = { stdin: stdinStream, stderr, stdout };
-    const fs = { readFileSync, existsSync };
-    const actual = performHead([], fs, stream);
-    stdinStream.emit('data', 'file\nContents');
-    const expected = { error: '', lines: '' };
-    assert.deepStrictEqual(actual, expected);
-    assert(stdinStream.setEncoding.calledWith('utf8'));
+  it('should give all elements if total number of elements are less than 10 required number of lines is not given', function() {
+    const path = 'path';
+    const fileContents = ['1', '2', '3'];
+    const expected = ['1', '2', '3'];
+    assert.deepStrictEqual(extractFirstNLines(fileContents), expected);
+  });
+});
+
+describe('stdInput', function() {
+  it('should get standard input and display', function() {
+    const display = function(output) {
+      assert.equal(output.error, '');
+      assert.equal(output.lines, 'file\nContents');
+    };
+    stdInput(null, 'file\nContents', display, 10);
   });
 });
