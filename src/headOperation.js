@@ -1,7 +1,3 @@
-const performHead = function(cmdLineArgs, fs, display) {
-  getHeadLines(cmdLineArgs, fs, display);
-};
-
 const parseCmdLineArgs = function(cmdLineArgs) {
   const parsedCmdLineArgs = {};
   const indexOfFirstElement = 0;
@@ -15,12 +11,8 @@ const parseCmdLineArgs = function(cmdLineArgs) {
   return parsedCmdLineArgs;
 };
 
-const getHeadLines = function(cmdLineArgs, fs, display) {
+const performHead = function(cmdLineArgs, fs, display) {
   const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs);
-  getFileContents(parsedCmdLineArgs, display, fs);
-};
-
-const getFileContents = function(parsedCmdLineArgs, display, fs) {
   const { readFile, existsSync } = fs;
   const { filePath, requiredNoOfLines } = parsedCmdLineArgs;
   const content = { error: '', lines: '' };
@@ -52,7 +44,6 @@ const extractFirstNLines = function(contents, requiredNoOfLines) {
 };
 
 module.exports = {
-  getHeadLines,
   parseCmdLineArgs,
   performHead,
   stdInput,

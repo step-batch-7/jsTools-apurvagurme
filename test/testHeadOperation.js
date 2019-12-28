@@ -8,32 +8,6 @@ const {
 const { assert } = require('chai');
 const fs = require('fs');
 
-describe('getHeadLines', function() {
-  it('should give an error or the required headlines of the given file', function() {
-    const expected = undefined;
-    const cmdLineArgs = ['-n', '2', 'file1'];
-    const display = function(output) {
-      assert.equal(output.error, 'head: file1: No such file or directory');
-      assert.equal(output.lines, '');
-    };
-    assert.deepStrictEqual(getHeadLines(cmdLineArgs, fs, display), expected);
-  });
-
-  it('should give an error or the required headlines of the given file', function() {
-    const readFile = function() {
-      return 'fileContents';
-    };
-    const existsSync = function() {
-      return true;
-    };
-    const display = function() {};
-    const fs = { readFile, existsSync };
-    const expected = undefined;
-    const cmdLineArgs = ['-n', '2', 'file1'];
-    assert.deepStrictEqual(getHeadLines(cmdLineArgs, fs, display), expected);
-  });
-});
-
 describe('parseCmdLineArgs', function() {
   it('should give the given file name and required number of lines in an object', function() {
     const userInputs = ['-n', '2', 'file1'];

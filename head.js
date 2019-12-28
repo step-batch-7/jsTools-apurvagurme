@@ -3,8 +3,8 @@ const { readFile, existsSync } = fs;
 const { performHead } = require('./src/headOperation');
 
 const display = function({ error, lines }) {
-  error && process.stderr.write(error);
-  lines && process.stdout.write(lines);
+  process.stderr.write(error);
+  process.stdout.write(lines);
 };
 
 const main = function() {
