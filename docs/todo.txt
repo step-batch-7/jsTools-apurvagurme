@@ -32,6 +32,11 @@ v.[0.2] cat file1 | node head.js
 
 ------------------------------------------------------------------------------------------    
 
-* Change readFileSync to readFile (synchronous to asynchronous)
-  For that first remove the Head class 
-  Create a callback for the readFile to perform head operation     
+* Change readFileSync to readFile (synchronous to asynchronous)--done--
+  For that first remove the Head class --done--
+  Create a callback for the readFile to perform head operation --done--
+
+------------------------------------------------------------------------------------------    
+
+* Implement one feature if two or more times -n option is given,
+  then take the last -n options field and perform head operation. --done--   

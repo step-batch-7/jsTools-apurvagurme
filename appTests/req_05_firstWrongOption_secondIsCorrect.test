@@ -1,0 +1,3 @@
+node head.js -b 1 -n 0 head.js
+head: illegal option -- b
+usage: head [-n lines | -c bytes] [file ...]
