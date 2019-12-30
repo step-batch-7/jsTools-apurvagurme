@@ -4,22 +4,24 @@ const getCmdLineArgsInfo = function (cmdLineArgsInfo, noOfLine, file) {
   return cmdLineArgsInfo;
 };
 
-const displayIllegalOpt = function (firstCmdArg, display) {
+const displayIllegalOpt = function (firstCmdArg) {
   const cmdLineArgsInfo = {};
-  cmdLineArgsInfo.error = `head: illegal option -- ${firstCmdArg.slice(1)}\nusage: head [-n lines | -c bytes] [file ...]`;
+  const firstErrLine = `head: illegal option -- ${firstCmdArg.slice(1)}\n`;
+  const secondErrLine = 'usage: head [-n lines | -c bytes] [file ...]';
+  cmdLineArgsInfo.error = firstErrLine + secondErrLine;
   cmdLineArgsInfo.lines = '';
-  display(cmdLineArgsInfo);
+  return cmdLineArgsInfo;
 };
 
-const parseCmdLineArgs = function (cmdLineArgs, display) {
+const parseCmdLineArgs = function (cmdLineArgs) {
   const cmdLineArgsInfo = { error: '', noOfLines: 10, filePath: '' };
   const [firstCmdArg, noOfLine, file] = cmdLineArgs;
   if (firstCmdArg.startsWith('-')) {
     if (firstCmdArg.slice(1) === 'n') {
       return getCmdLineArgsInfo(cmdLineArgsInfo, noOfLine, file);
     }
-    displayIllegalOpt(firstCmdArg, display);
-    return;
+    const output = displayIllegalOpt(firstCmdArg);
+    return output;
   }
   cmdLineArgsInfo.filePath = firstCmdArg;
   return cmdLineArgsInfo;
@@ -27,7 +29,7 @@ const parseCmdLineArgs = function (cmdLineArgs, display) {
 
 const performHead = function (cmdLineArgs, readFile, display) {
   const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs, display);
-  if (parsedCmdLineArgs === undefined) { return; }
+  if (parsedCmdLineArgs.error !== '') { display(parsedCmdLineArgs); return; }
   const { filePath, noOfLines } = parsedCmdLineArgs;
   const cmdLineArgsInfo = { error: '', lines: '' };
   readFile(filePath, 'utf8', (err, data) => {
