@@ -4,7 +4,7 @@ const {
   displayIllegalOpt,
   parseCmdLineArgs,
   performHead,
-  stdInput
+  callback
 } = require('../src/headOperation');
 const { assert } = require('chai');
 const sinon = require('sinon');
@@ -57,38 +57,49 @@ describe('displayIllegalOpt', function () {
 });
 
 describe('performHead', function () {
-  const readFile = function () {
-    return 'fileContents';
-  };
-
-  const existsSync = function () {
-    return true;
-  };
-
-  const display = function (output) {
-    assert.equal(output.error, 'head: file1: No such file or directory');
-    assert.equal(output.lines, '');
-  };
-  const fs = { readFile, existsSync };
-  const process = {};
-  it('should give the end result when standard input is not given', function () {
-    const cmdLineArgs = ['file1'];
-    const actual = performHead(cmdLineArgs, fs, process, display);
-    const expected = undefined;
-    assert.deepStrictEqual(actual, expected);
+  it('should give error if file is not present', () => {
+    const commandLineArgs = ['-n', '2', 'file1'];
+    const display = result => {
+      assert.strictEqual(result.error, 'head: file1: No such file or directory');
+      assert.strictEqual(result.lines, '');
+    };
+    const readFile = (path, encoding, callback) => {
+      assert.strictEqual(path, 'file1');
+      assert.strictEqual(encoding, 'utf8');
+      callback({ code: 'ENOENT' });
+    };
+    performHead(commandLineArgs, readFile, display);
   });
 
-  it('should give the end result when standard input is not given', function () {
-    const display = sinon.fake();
-    const existsSync = sinon.stub();
-    const readFile = sinon.spy();
-    const cmdLineArgs = ['-n', '2', 'file1'];
-    const fs = { existsSync, readFile };
-    const cmdLineArgsInfo = { error: 'head: file1: No such file or directory', lines: '' };
-    performHead(cmdLineArgs, fs, display);
-    assert(existsSync.calledWith('file1'));
-    assert(display.calledWith(cmdLineArgsInfo));
-    assert(existsSync.calledWith('file1'));
+  it('should display the error or lines if file is not present', () => {
+    const commandLineArgs = ['-n', '2', 'file1'];
+    const display = result => {
+      assert.strictEqual(result.error, '');
+      assert.strictEqual(result.lines, 'file\nContents');
+    };
+    const readFile = (path, encoding, callback) => {
+      assert.strictEqual(path, 'file1');
+      assert.strictEqual(encoding, 'utf8');
+      callback(null, 'file\nContents');
+    };
+    performHead(commandLineArgs, readFile, display);
+  });
+
+  it('should display the error or lines if file is not present', () => {
+    const commandLineArgs = ['-b', '2', 'file1'];
+
+    const display = result => {
+      assert.strictEqual(result.error, 'head: illegal option -- b\nusage: head [-n lines | -c bytes] [file ...]');
+      assert.strictEqual(result.lines, '');
+    };
+
+    const readFile = (path, encoding, callback) => {
+      assert.strictEqual(path, 'file1');
+      assert.strictEqual(encoding, 'utf8');
+      callback(null, 'file\nContents');
+    };
+
+    performHead(commandLineArgs, readFile, display);
   });
 });
 
@@ -106,22 +117,15 @@ describe('extractFirstNLines', function () {
   });
 });
 
-describe('stdInput', function () {
+describe('callback', function () {
   it('should get standard input and display', function () {
-    const noOfLines = 10;
-    const display = function (output) {
-      assert.equal(output.error, '');
-      assert.equal(output.lines, 'file\nContents');
-    };
-    stdInput(null, 'file\nContents', { display, noOfLines });
+    const output = { error: '', lines: 'file\nContents' };
+    assert.deepStrictEqual(callback(null, 'file\nContents', 2), output);
   });
 
   it('should display an error while reading a file', function () {
-    const noOfLines = 10;
-    const display = sinon.fake();
-    const error = 'file not present';
-    const dataInfo = { error: 'file not present', lines: '' };
-    stdInput(error, '', { display, noOfLines });
-    assert(display.calledWith(dataInfo));
+    const error1 = new Error('file not present');
+    const dataInfo = { error: error1.message, lines: '' };
+    assert.deepStrictEqual(callback(error1, ''), dataInfo);
   });
 });

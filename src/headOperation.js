@@ -1,3 +1,16 @@
+const getCmdLineArgsInfo = function (cmdLineArgsInfo, noOfLine, file) {
+  cmdLineArgsInfo.noOfLines = noOfLine;
+  cmdLineArgsInfo.filePath = file;
+  return cmdLineArgsInfo;
+};
+
+const displayIllegalOpt = function (firstCmdArg, display) {
+  const cmdLineArgsInfo = {};
+  cmdLineArgsInfo.error = `head: illegal option -- ${firstCmdArg.slice(1)}\nusage: head [-n lines | -c bytes] [file ...]`;
+  cmdLineArgsInfo.lines = '';
+  display(cmdLineArgsInfo);
+};
+
 const parseCmdLineArgs = function (cmdLineArgs, display) {
   const cmdLineArgsInfo = { error: '', noOfLines: 10, filePath: '' };
   const [firstCmdArg, noOfLine, file] = cmdLineArgs;
@@ -12,43 +25,30 @@ const parseCmdLineArgs = function (cmdLineArgs, display) {
   return cmdLineArgsInfo;
 };
 
-const getCmdLineArgsInfo = function (cmdLineArgsInfo, noOfLine, file) {
-  cmdLineArgsInfo.noOfLines = noOfLine;
-  cmdLineArgsInfo.filePath = file;
-  return cmdLineArgsInfo;
-};
-
-const displayIllegalOpt = function (firstCmdArg, display) {
-  const cmdLineArgsInfo = {};
-  cmdLineArgsInfo.error = `head: illegal option -- ${firstCmdArg.slice(1)}\nusage: head [-n lines | -c bytes] [file ...]`;
-  cmdLineArgsInfo.lines = '';
-  display(cmdLineArgsInfo);
-};
-
-const performHead = function (cmdLineArgs, fs, display) {
+const performHead = function (cmdLineArgs, readFile, display) {
   const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs, display);
   if (parsedCmdLineArgs === undefined) { return; }
   const { filePath, noOfLines } = parsedCmdLineArgs;
   const cmdLineArgsInfo = { error: '', lines: '' };
-  if (!fs.existsSync(filePath)) {
-    cmdLineArgsInfo.error = `head: ${filePath}: No such file or directory`;
-    display(cmdLineArgsInfo);
-    return;
-  }
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    stdInput(err, data, { display, noOfLines });
+  readFile(filePath, 'utf8', (err, data) => {
+    if (err && err.code === 'ENOENT') {
+      cmdLineArgsInfo.error = `head: ${filePath}: No such file or directory`;
+      display(cmdLineArgsInfo);
+      return;
+    }
+    const output = callback(err, data, noOfLines);
+    display(output);
   });
 };
 
-const stdInput = function (err, data, { display, noOfLines }) {
+const callback = function (err, data, noOfLines) {
   if (err) {
-    const result = { error: err, lines: '' };
-    display(result);
+    return { error: err.message, lines: '' };
   }
   const cmdLineArgsInfo = { error: '', lines: '' };
   const splitted = data.split('\n');
   cmdLineArgsInfo.lines = extractFirstNLines(splitted, noOfLines).join('\n');
-  display(cmdLineArgsInfo);
+  return cmdLineArgsInfo;
 };
 
 const extractFirstNLines = function (contents, noOfLines) {
@@ -62,6 +62,6 @@ module.exports = {
   getCmdLineArgsInfo,
   displayIllegalOpt,
   performHead,
-  stdInput,
+  callback,
   extractFirstNLines
 };
