@@ -1,6 +1,6 @@
 const fs = require('fs');
-const { readFile } = fs;
-const { performHead } = require('./src/headOperation');
+const { createReadStream } = fs;
+const { performHead } = require('./src/headLib');
 
 const display = function ({ error, lines }) {
   process.stderr.write(error);
@@ -9,7 +9,7 @@ const display = function ({ error, lines }) {
 
 const main = function () {
   const [, , ...cmdLineArgs] = process.argv;
-  performHead(cmdLineArgs, readFile, display);
+  performHead(cmdLineArgs, createReadStream, display);
 };
 
 main();

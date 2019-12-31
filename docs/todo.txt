@@ -38,5 +38,12 @@ v.[0.2] cat file1 | node head.js
 
 ------------------------------------------------------------------------------------------    
 
-* Implement one feature if two or more times -n option is given,
-  then take the last -n options field and perform head operation. --done--   
+* Implement one feature if two or more times -n option is given, --done--
+  then take the last -n options field and perform head operation. --done--
+
+------------------------------------------------------------------------------------------    
+
+* convert readFile to readstream  --done--  
+  use streams to read the file that can also be used for standard input --done--
+
+------------------------------------------------------------------------------------------    
