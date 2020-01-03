@@ -16,7 +16,7 @@ const displayIllegalOpt = function (firstCmdArg) {
 };
 
 const parseCmdLineArgs = function (cmdLineArgs) {
-  const cmdLineArgsInfo = { error: '', noOfLines: 10, filePath: '' };
+  const cmdLineArgsInfo = {error: '', noOfLines: 10, filePath: ''};
   if(!cmdLineArgs.length) {
     return cmdLineArgsInfo;
   }
@@ -47,8 +47,7 @@ const loadFileContents = function (inputStream, filePath, onLoadComplete) {
     if (err && err.code === 'ENOENT') {
       const error = `head: ${filePath}: No such file or directory`;
       onLoadComplete('', error);
-    }
-    else {
+    } else {
       const error = err.message;
       onLoadComplete('', error);
     }
@@ -57,16 +56,17 @@ const loadFileContents = function (inputStream, filePath, onLoadComplete) {
 
 const performHead = function (cmdLineArgs, streamPicker, display) {
   const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs, display);
-  if (parsedCmdLineArgs.error !== '') { return display(parsedCmdLineArgs); }
-  const { filePath, noOfLines } = parsedCmdLineArgs;
+  if (parsedCmdLineArgs.error !== '') {
+    return display(parsedCmdLineArgs); 
+  }
+  const {filePath, noOfLines} = parsedCmdLineArgs;
   const inputStream = streamPicker.pick(filePath);
   const onLoadComplete = (data, error) => {
     if (data) {
       const lines = extractFirstNLines(data.toString(), noOfLines);
-      display({ lines, error: '' });
-    }
-    else {
-      display({ error, lines: '' });
+      display({lines, error: ''});
+    } else {
+      display({error, lines: ''});
     }
   };
   loadFileContents(inputStream, filePath, onLoadComplete);

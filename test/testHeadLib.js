@@ -6,21 +6,21 @@ const {
   performHead,
   loadFileContents
 } = require('../src/headLib');
-const { assert } = require('chai');
+const {assert} = require('chai');
 const sinon = require('sinon');
 
 describe('parseCmdLineArgs', function () {
   it('should give the given file name and required number of lines in an object', () => {
     const display = sinon.fake();
     const userInputs = ['-n', '2', 'file1'];
-    const expected = { error: '', filePath: 'file1', noOfLines: '2' };
+    const expected = {error: '', filePath: 'file1', noOfLines: '2'};
     assert.deepStrictEqual(parseCmdLineArgs(userInputs, display), expected);
   });
 
   it('should give the given file and the default number of lines required', () => {
     const display = sinon.fake();
     const userInputs = ['file1'];
-    const expected = { error: '', filePath: 'file1', noOfLines: 10 };
+    const expected = {error: '', filePath: 'file1', noOfLines: 10};
     assert.deepStrictEqual(parseCmdLineArgs(userInputs, display), expected);
   });
 
@@ -30,17 +30,17 @@ describe('parseCmdLineArgs', function () {
     const firstCmdArg = '-b';
     const errMsg1 = `head: illegal option -- ${firstCmdArg.slice(1)}\n`;
     const errMsg2 = 'usage: head [-n lines | -c bytes] [file ...]';
-    const cmdLineArgsInfo = { error: errMsg1 + errMsg2, lines: '' };
+    const cmdLineArgsInfo = {error: errMsg1 + errMsg2, lines: ''};
     assert.deepStrictEqual(parseCmdLineArgs(userInputs, display), cmdLineArgsInfo);
   });
 });
 
 describe('getCmdLineArgsInfo', function () {
   it('should give parsed command Line Arguments when -n option is given', () => {
-    const cmdLineArgs = { error: '', noOfLines: '', filePath: '' };
+    const cmdLineArgs = {error: '', noOfLines: '', filePath: ''};
     const noOfLine = 2;
     const file = 'file';
-    const expected = { error: '', noOfLines: 2, filePath: 'file' };
+    const expected = {error: '', noOfLines: 2, filePath: 'file'};
     assert.deepStrictEqual(getCmdLineArgsInfo(cmdLineArgs, noOfLine, file), expected);
   });
 });
@@ -50,7 +50,7 @@ describe('displayIllegalOpt', function () {
     const display = sinon.fake();
     const firstCmdArg = '-b';
     const error = `head: illegal option -- ${firstCmdArg.slice(1)}\nusage: head [-n lines | -c bytes] [file ...]`;
-    assert.deepStrictEqual(displayIllegalOpt(firstCmdArg, display), { error: error, lines: '' });
+    assert.deepStrictEqual(displayIllegalOpt(firstCmdArg, display), {error: error, lines: ''});
   });
 });
 
@@ -121,7 +121,7 @@ describe('loadFileContents', function () {
   it('should call onLoadComplete function when data event is fired', function () {
     const onLoadComplete = sinon.fake();
     const filePath = 'file1';
-    const inputStream = { on: sinon.fake() };
+    const inputStream = {on: sinon.fake()};
 
     loadFileContents(inputStream, filePath, onLoadComplete);
     assert(inputStream.on.firstCall.calledWith('data'));
@@ -132,11 +132,11 @@ describe('loadFileContents', function () {
   it('should call onLoadComplete function when error event of ENOENT code is fired', () => {
     const onLoadComplete = sinon.fake();
     const filePath = 'missingFile';
-    const inputStream = { on: sinon.fake() };
+    const inputStream = {on: sinon.fake()};
 
     loadFileContents(inputStream, filePath, onLoadComplete);
     assert(inputStream.on.secondCall.calledWith('error'));
-    inputStream.on.secondCall.args[1]({ code: 'ENOENT' });
+    inputStream.on.secondCall.args[1]({code: 'ENOENT'});
     const error = `head: ${filePath}: No such file or directory`;
     assert(onLoadComplete.calledWith('', error));
   });
@@ -144,11 +144,11 @@ describe('loadFileContents', function () {
   it('should call onLoadComplete function when error event except ENOENT code is fired', () => {
     const onLoadComplete = sinon.fake();
     const filePath = 'missingFile';
-    const inputStream = { on: sinon.fake() };
+    const inputStream = {on: sinon.fake()};
 
     loadFileContents(inputStream, filePath, onLoadComplete);
     assert(inputStream.on.secondCall.calledWith('error'));
-    inputStream.on.secondCall.args[1]({ code: 'E', message: 'another error' });
+    inputStream.on.secondCall.args[1]({code: 'E', message: 'another error'});
     assert(onLoadComplete.calledWith('', 'another error'));
   });
 });
