@@ -56,50 +56,47 @@ describe('displayIllegalOpt', function () {
 
 describe('performHead', function () {
   it('should give error if file is not present', () => {
-    const commandLineArgs = ['-n', '2', 'file1'];
 
     const display = result => {
-      console.log(result);
       assert.strictEqual(result.error, 'head: file1: No such file or directory');
       assert.strictEqual(result.lines, '');
     };
 
-
-    const inputStream = { on: sinon.fake() };
-    const createStream = sinon.fake.returns(inputStream);
-    performHead(commandLineArgs, createStream, display);
-    assert.strictEqual(inputStream.on.firstCall.args[0], 'data');
-    assert.strictEqual(inputStream.on.secondCall.args[0], 'error');
-    inputStream.on.secondCall.args[1]({ code: 'ENOENT' });
-    assert(createStream.calledWith('file1'));
+    const readers = {createReadStream: sinon.fake.returns('file1'), stdin: {on: sinon.fake()}, pick: sinon.stub().withArgs('').returns({on: sinon.fake()})};
+    const commandLineArgs = ['file1'];    
+    performHead(commandLineArgs, readers, display);
+    assert.strictEqual(readers.pick('').on.firstCall.args[0], 'data');
+    assert.strictEqual(readers.pick('').on.secondCall.args[0], 'error');
+    readers.pick('').on.secondCall.args[1]({code: 'ENOENT'});
+    assert.ok(readers.pick.calledWithExactly(''));
   });
-
+ 
   it('should display the lines if file is present', () => {
-
     const display = result => {
       assert.strictEqual(result.error, '');
-      assert.strictEqual(result.lines, '1\n2');
+      assert.strictEqual(result.lines, '1\n2\n3');
     };
 
-    const commandLineArgs = ['-n', '2', 'file1'];
-    const inputStream = { setEncoding: sinon.fake(), on: sinon.fake() };
-    const createStream = sinon.fake.returns(inputStream);
-    performHead(commandLineArgs, createStream, display);
-    assert.strictEqual(inputStream.on.firstCall.args[0], 'data');
-    inputStream.on.firstCall.args[1]('1\n2\n3\n4');
-    assert(createStream.calledWith('file1'));
+    const readers = {createReadStream: sinon.fake.returns({}), stdin: {on: sinon.fake()}, pick: sinon.stub().withArgs('').returns({on: sinon.fake()})};
+    const commandLineArgs = [];    
+    performHead(commandLineArgs, readers, display);
+    assert.strictEqual(readers.pick('').on.firstCall.args[0], 'data');
+    assert.strictEqual(readers.pick('').on.secondCall.args[0], 'error');
+    readers.pick('').on.firstCall.args[1]('1\n2\n3');
+    
+    assert.ok(readers.pick.calledWithExactly(''));
   });
 
   it('should display the error or lines if file is not present', () => {
-    const commandLineArgs = ['-b', '2', 'file1'];
-
+    
     const display = result => {
       const errMsg1 = 'head: illegal option -- b\n';
       const errMsg2 = 'usage: head [-n lines | -c bytes] [file ...]';
       assert.strictEqual(result.error, errMsg1 + errMsg2);
       assert.strictEqual(result.lines, '');
     };
-
+    
+    const commandLineArgs = ['-b', '2', 'file1'];
     const createStream = sinon.fake();
     performHead(commandLineArgs, createStream, display);
   });

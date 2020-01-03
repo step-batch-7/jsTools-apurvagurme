@@ -1,3 +1,0 @@
-cat file1.txt | node head.js -n 2
-One
-Two

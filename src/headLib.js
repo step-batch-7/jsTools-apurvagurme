@@ -15,6 +15,7 @@ const displayIllegalOpt = function (firstCmdArg) {
 
 const parseCmdLineArgs = function (cmdLineArgs) {
   const cmdLineArgsInfo = { error: '', noOfLines: 10, filePath: '' };
+  if(cmdLineArgs.length === 0) {return cmdLineArgsInfo;}
   const [firstCmdArg, noOfLine, file] = cmdLineArgs;
   if (firstCmdArg.startsWith('-')) {
     if (firstCmdArg.slice(1) === 'n') {
@@ -36,7 +37,7 @@ const extractFirstNLines = function (contents, noOfLines) {
 
 const loadFileContents = function (inputStream, filePath, onLoadComplete) {
   inputStream.on('data', (data) => {
-    onLoadComplete(data);
+    onLoadComplete(data, '');
   });
   inputStream.on('error', (err) => {
     if (err && err.code === 'ENOENT') {
@@ -50,27 +51,21 @@ const loadFileContents = function (inputStream, filePath, onLoadComplete) {
   });
 };
 
-const performHead = function (cmdLineArgs, stream, display) {
+const performHead = function (cmdLineArgs, streamPicker, display) {
   const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs, display);
-  if (parsedCmdLineArgs.error !== '') {
-    display(parsedCmdLineArgs);
-    return;
-  }
-
+  if (parsedCmdLineArgs.error !== '') { return display(parsedCmdLineArgs); }
   const { filePath, noOfLines } = parsedCmdLineArgs;
-  const inputStream = stream(filePath);
-
+  const inputStream = streamPicker.pick(filePath);
   const onLoadComplete = (data, error) => {
     if (data) {
       const lines = extractFirstNLines(data.toString(), noOfLines);
-      display({ lines: lines, error: '' });
+      display({ lines, error: '' });
     }
     else {
-      display({ error: error, lines: '' });
+      display({ error, lines: '' });
     }
   };
   loadFileContents(inputStream, filePath, onLoadComplete);
-
 };
 
 module.exports = {

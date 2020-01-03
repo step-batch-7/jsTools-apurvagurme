@@ -47,3 +47,5 @@ v.[0.2] cat file1 | node head.js
   use streams to read the file that can also be used for standard input --done--
 
 ------------------------------------------------------------------------------------------    
+
+* stream class to get the readstream --done--
