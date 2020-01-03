@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cat <<EOF > .git/hooks/pre-commit  
-eslint src test *.js
+npx eslint src test *.js
 if [ \$? != 0 ]; then 
    exit 1
 fi
