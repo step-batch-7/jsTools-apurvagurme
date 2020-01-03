@@ -15,7 +15,7 @@
     "eslint": "^6.8.0"
   },
   "scripts": {
-    "test": "mocha && eslint src test"
+    "test": "mocha && eslint src test && ./runAppTest.sh ./appTests/*.test"
   },
   "repository": {
     "type": "git",
