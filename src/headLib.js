@@ -4,10 +4,10 @@ const getCmdLineArgsInfo = function (cmdLineArgsInfo, noOfLine, file) {
   return cmdLineArgsInfo;
 };
 
-const displayIllegalOpt = function (firstCmdArg) {
+const displayIllegalOpt = function (illegalOption) {
   const cmdLineArgsInfo = {};
-  const optionIndex = 1;
-  const illegalOption = firstCmdArg.slice(optionIndex);
+  // const optionIndex = 1;
+  // const illegalOption = firstCmdArg.slice(optionIndex);
   const firstErrLine = `head: illegal option -- ${illegalOption}\n`;
   const secondErrLine = 'usage: head [-n lines | -c bytes] [file ...]';
   cmdLineArgsInfo.error = firstErrLine + secondErrLine;
@@ -21,11 +21,11 @@ const parseCmdLineArgs = function (cmdLineArgs) {
     return cmdLineArgsInfo;
   }
   const [firstCmdArg, noOfLine, file] = cmdLineArgs;
-  if (firstCmdArg.startsWith('-')) {
-    if (firstCmdArg === '-n') {
+  if (/^-/.test(firstCmdArg)) {
+    if (/-n/.test(firstCmdArg)) {
       return getCmdLineArgsInfo(cmdLineArgsInfo, noOfLine, file);
     }
-    return displayIllegalOpt(firstCmdArg);
+    return displayIllegalOpt(firstCmdArg.match(/[^-]/) );
   }
   cmdLineArgsInfo.filePath = firstCmdArg;
   return cmdLineArgsInfo;

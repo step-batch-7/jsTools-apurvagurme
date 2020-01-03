@@ -1,4 +1,4 @@
-const { assert } = require('chai');
+const {assert} = require('chai');
 const StreamPicker = require('../src/streamLib');
 const sinon = require('sinon');
 
