@@ -1,3 +1,4 @@
+const OptionParser = require('./parseInput');
 const EMPTY_STRING = '';
 
 const getCmdLineArgsInfo = function (cmdLineArgsInfo, noOfLine, file) {
@@ -6,7 +7,7 @@ const getCmdLineArgsInfo = function (cmdLineArgsInfo, noOfLine, file) {
   return cmdLineArgsInfo;
 };
 
-const displayIllegalOpt = function (firstCmdArg) {
+const getIllegalOptMsg = function (firstCmdArg) {
   const cmdLineArgsInfo = {};
   const optionIndex = 1;
   const illegalOption = firstCmdArg.slice(optionIndex);
@@ -17,31 +18,11 @@ const displayIllegalOpt = function (firstCmdArg) {
   return cmdLineArgsInfo;
 };
 
-const parseCmdLineArgs = function (cmdLineArgs) {
-  const cmdLineArgsInfo = {
-    error: EMPTY_STRING,
-    noOfLines: 10, filePath: EMPTY_STRING
-  };
-  if (!cmdLineArgs.length) {
-    return cmdLineArgsInfo;
-  }
-  const [firstCmdArg, noOfLine, file] = cmdLineArgs;
-  if (/^-/.test(firstCmdArg)) {
-    if (/-n/.test(firstCmdArg)) {
-      return getCmdLineArgsInfo(cmdLineArgsInfo, noOfLine, file);
-    }
-    return displayIllegalOpt(firstCmdArg);
-  }
-  cmdLineArgsInfo.filePath = firstCmdArg;
-  return cmdLineArgsInfo;
-};
-
 const extractFirstNLines = function (contents, noOfLines) {
   const indexOfFirstLine = 0;
   const splittedData = contents.split('\n');
   const lines = splittedData.slice(indexOfFirstLine, noOfLines);
   return lines.join('\n');
-
 };
 
 const loadFileContents = function (inputStream, filePath, onLoadComplete) {
@@ -60,9 +41,16 @@ const loadFileContents = function (inputStream, filePath, onLoadComplete) {
 };
 
 const performHead = function (cmdLineArgs, streamPicker, onCompletion) {
-  const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs, onCompletion);
-  if (parsedCmdLineArgs.error !== EMPTY_STRING) {
-    return onCompletion(parsedCmdLineArgs);
+  const optionParser = new OptionParser(['-n']);
+  let parsedCmdLineArgs = {
+    error: EMPTY_STRING,
+    noOfLines: 10, filePath: EMPTY_STRING,
+    illegalOption: ''
+  };
+  parsedCmdLineArgs = optionParser.parse(cmdLineArgs, parsedCmdLineArgs);
+  if (parsedCmdLineArgs.illegalOption !== EMPTY_STRING) {
+    const { error, lines } = getIllegalOptMsg(parsedCmdLineArgs.illegalOption);
+    return onCompletion({ error, lines });
   }
   const { filePath, noOfLines } = parsedCmdLineArgs;
   const inputStream = streamPicker.pick(filePath);
@@ -78,9 +66,8 @@ const performHead = function (cmdLineArgs, streamPicker, onCompletion) {
 };
 
 module.exports = {
-  parseCmdLineArgs,
   getCmdLineArgsInfo,
-  displayIllegalOpt,
+  getIllegalOptMsg,
   performHead,
   extractFirstNLines,
   loadFileContents
