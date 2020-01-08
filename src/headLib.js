@@ -1,3 +1,5 @@
+const EMPTY_STRING = '';
+
 const getCmdLineArgsInfo = function (cmdLineArgsInfo, noOfLine, file) {
   cmdLineArgsInfo.noOfLines = noOfLine;
   cmdLineArgsInfo.filePath = file;
@@ -11,13 +13,16 @@ const displayIllegalOpt = function (firstCmdArg) {
   const firstErrLine = `head: illegal option -- ${illegalOption}\n`;
   const secondErrLine = 'usage: head [-n lines | -c bytes] [file ...]';
   cmdLineArgsInfo.error = firstErrLine + secondErrLine;
-  cmdLineArgsInfo.lines = '';
+  cmdLineArgsInfo.lines = EMPTY_STRING;
   return cmdLineArgsInfo;
 };
 
 const parseCmdLineArgs = function (cmdLineArgs) {
-  const cmdLineArgsInfo = {error: '', noOfLines: 10, filePath: ''};
-  if(!cmdLineArgs.length) {
+  const cmdLineArgsInfo = {
+    error: EMPTY_STRING,
+    noOfLines: 10, filePath: EMPTY_STRING
+  };
+  if (!cmdLineArgs.length) {
     return cmdLineArgsInfo;
   }
   const [firstCmdArg, noOfLine, file] = cmdLineArgs;
@@ -41,32 +46,32 @@ const extractFirstNLines = function (contents, noOfLines) {
 
 const loadFileContents = function (inputStream, filePath, onLoadComplete) {
   inputStream.on('data', (data) => {
-    onLoadComplete(data, '');
+    onLoadComplete(data, EMPTY_STRING);
   });
   inputStream.on('error', (err) => {
     if (err && err.code === 'ENOENT') {
       const error = `head: ${filePath}: No such file or directory`;
-      onLoadComplete('', error);
+      onLoadComplete(EMPTY_STRING, error);
     } else {
       const error = err.message;
-      onLoadComplete('', error);
+      onLoadComplete(EMPTY_STRING, error);
     }
   });
 };
 
-const performHead = function (cmdLineArgs, streamPicker, display) {
-  const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs, display);
-  if (parsedCmdLineArgs.error !== '') {
-    return display(parsedCmdLineArgs); 
+const performHead = function (cmdLineArgs, streamPicker, onCompletion) {
+  const parsedCmdLineArgs = parseCmdLineArgs(cmdLineArgs, onCompletion);
+  if (parsedCmdLineArgs.error !== EMPTY_STRING) {
+    return onCompletion(parsedCmdLineArgs);
   }
-  const {filePath, noOfLines} = parsedCmdLineArgs;
+  const { filePath, noOfLines } = parsedCmdLineArgs;
   const inputStream = streamPicker.pick(filePath);
   const onLoadComplete = (data, error) => {
     if (data) {
       const lines = extractFirstNLines(data.toString(), noOfLines);
-      display({lines, error: ''});
+      onCompletion({ lines, error: EMPTY_STRING });
     } else {
-      display({error, lines: ''});
+      onCompletion({ error, lines: EMPTY_STRING });
     }
   };
   loadFileContents(inputStream, filePath, onLoadComplete);
