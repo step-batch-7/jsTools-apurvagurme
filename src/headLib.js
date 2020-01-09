@@ -39,13 +39,8 @@ const loadFileContents = function (inputStream, filePath, onLoadComplete) {
 };
 
 const performHead = function (cmdLineArgs, streamPicker, onCompletion) {
-  const optionParser = new OptionParser(['-n']);
-  let parsedCmdLineArgs = {
-    error: EMPTY_STRING,
-    noOfLines: 10, filePath: EMPTY_STRING,
-    unknownOption: ''
-  };
-  parsedCmdLineArgs = optionParser.parse(cmdLineArgs, parsedCmdLineArgs);
+  const optionParser = new OptionParser({ '-n': 'noOfLines' });
+  const parsedCmdLineArgs = optionParser.parse(cmdLineArgs);
   if (parsedCmdLineArgs.unknownOption !== EMPTY_STRING) {
     const { error, lines } = getIllegalOptMsg(parsedCmdLineArgs.unknownOption);
     return onCompletion({ error, lines });
