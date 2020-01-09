@@ -1,22 +1,11 @@
 const {
   extractFirstNLines,
-  getCmdLineArgsInfo,
   getIllegalOptMsg,
   performHead,
   loadFileContents
 } = require('../src/headLib');
 const { assert } = require('chai');
 const sinon = require('sinon');
-
-describe('getCmdLineArgsInfo', function () {
-  it('should give parsed command Line Arguments when -n option is given', () => {
-    const cmdLineArgs = { error: '', noOfLines: '', filePath: '' };
-    const noOfLine = 2;
-    const file = 'file';
-    const expected = { error: '', noOfLines: 2, filePath: 'file' };
-    assert.deepStrictEqual(getCmdLineArgsInfo(cmdLineArgs, noOfLine, file), expected);
-  });
-});
 
 describe('getIllegalOptMsg', function () {
   it('should display error when called', () => {

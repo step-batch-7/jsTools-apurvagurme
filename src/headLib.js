@@ -1,12 +1,6 @@
 const OptionParser = require('./parseInput');
 const EMPTY_STRING = '';
 
-const getCmdLineArgsInfo = function (cmdLineArgsInfo, noOfLine, file) {
-  cmdLineArgsInfo.noOfLines = noOfLine;
-  cmdLineArgsInfo.filePath = file;
-  return cmdLineArgsInfo;
-};
-
 const getIllegalOptMsg = function (firstCmdArg) {
   const cmdLineArgsInfo = { lines: EMPTY_STRING };
   const illegalOption = firstCmdArg.replace('-', '');
@@ -59,7 +53,6 @@ const performHead = function (cmdLineArgs, streamPicker, onCompletion) {
 };
 
 module.exports = {
-  getCmdLineArgsInfo,
   getIllegalOptMsg,
   performHead,
   extractFirstNLines,
