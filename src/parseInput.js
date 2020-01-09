@@ -11,7 +11,7 @@ class OptionParser {
         parsedCmdLineArgs.filePath = file;
         return parsedCmdLineArgs;
       }
-      parsedCmdLineArgs.illegalOption = firstCmdArg;
+      parsedCmdLineArgs.unknownOption = firstCmdArg;
       return parsedCmdLineArgs;
     }
     parsedCmdLineArgs.filePath = firstCmdArg;

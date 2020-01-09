@@ -8,13 +8,11 @@ const getCmdLineArgsInfo = function (cmdLineArgsInfo, noOfLine, file) {
 };
 
 const getIllegalOptMsg = function (firstCmdArg) {
-  const cmdLineArgsInfo = {};
-  const optionIndex = 1;
-  const illegalOption = firstCmdArg.slice(optionIndex);
+  const cmdLineArgsInfo = { lines: EMPTY_STRING };
+  const illegalOption = firstCmdArg.replace('-', '');
   const firstErrLine = `head: illegal option -- ${illegalOption}\n`;
   const secondErrLine = 'usage: head [-n lines | -c bytes] [file ...]';
   cmdLineArgsInfo.error = firstErrLine + secondErrLine;
-  cmdLineArgsInfo.lines = EMPTY_STRING;
   return cmdLineArgsInfo;
 };
 
@@ -45,11 +43,11 @@ const performHead = function (cmdLineArgs, streamPicker, onCompletion) {
   let parsedCmdLineArgs = {
     error: EMPTY_STRING,
     noOfLines: 10, filePath: EMPTY_STRING,
-    illegalOption: ''
+    unknownOption: ''
   };
   parsedCmdLineArgs = optionParser.parse(cmdLineArgs, parsedCmdLineArgs);
-  if (parsedCmdLineArgs.illegalOption !== EMPTY_STRING) {
-    const { error, lines } = getIllegalOptMsg(parsedCmdLineArgs.illegalOption);
+  if (parsedCmdLineArgs.unknownOption !== EMPTY_STRING) {
+    const { error, lines } = getIllegalOptMsg(parsedCmdLineArgs.unknownOption);
     return onCompletion({ error, lines });
   }
   const { filePath, noOfLines } = parsedCmdLineArgs;
